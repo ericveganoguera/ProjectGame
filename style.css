@@ -11,11 +11,9 @@ body {
 
 #player {
     background-color: orange;
-    border: 1px solid black;
     position: absolute;
 }
 .enemy{
     background-color: blue;
-    border: 1px solid black;
     position: absolute;
 }
