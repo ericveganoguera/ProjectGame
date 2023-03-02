@@ -12,14 +12,10 @@ body {
 #player {
     background-color: orange;
     border: 1px solid black;
-    width: 10vh;
-    height: 10vh;
     position: absolute;
 }
 .enemy{
     background-color: blue;
     border: 1px solid black;
-    width: 5vh;
-    height: 5vh;
     position: absolute;
 }
