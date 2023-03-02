@@ -5,7 +5,7 @@ body {
 
 #board {
     height: 100vh;
-    background-color: red;
+    background-color: darkred;
     position: relative;
 } 
 
@@ -15,6 +15,11 @@ body {
     width: 10vh;
     height: 10vh;
     position: absolute;
-    bottom: 0vh;
-    left: 0vh
+}
+.enemy{
+    background-color: blue;
+    border: 1px solid black;
+    width: 5vh;
+    height: 5vh;
+    position: absolute;
 }
