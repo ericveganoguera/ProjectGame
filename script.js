@@ -1,29 +1,45 @@
-const canvas = document.getElementById("myCanvas")
-const ctx = canvas.getContext("2d")
-
-let x = 500
-let y = 100
-let size = 50
-
-
-ctx.fillStyle = "blue"
-ctx.fillRect(x,y,size,size)
-
-document.addEventListener("keydown", event => {
-    switch (event.code) {
-        case "ArrowRight": x+=10
-        break;
-        case "ArrowLeft": x-=10
-        break;
-        case "ArrowDown": y-=10
-        break;
-        case "ArrowUp": y+=10
-        break;
+class Player {
+    constructor (){
+        this.positionX = 0;
+        this.positionY = 0;
+        this.playerElm = document.getElementById("player")
     }
+    moveRight(){
+        this.positionX++
+        this.playerElm.style.left = this.positionX+"vh"
+    }
+    moveLeft(){
+        this.positionX--
+        this.playerElm.style.left = this.positionX+"vh"
+    }
+    moveUp(){
+        this.positionY++
+        this.playerElm.style.bottom = this.positionY+"vh"
+    }
+    moveDown(){
+        this.positionY--
+        this.playerElm.style.bottom = this.positionY+"vh"
+    }
+}
 
-    ctx.clearRect(0,0,canvas.width,canvas.height)
-    ctx.fillStyle = "black"
-    ctx.fillRect(x,y,size,size)
-
-    console.log("Square position: "+x+", "+y)
+document.addEventListener("keydown",event => {
+    switch (event.code) {
+        case "ArrowRight":
+            myPlayer.moveRight()
+            break;
+        case "ArrowLeft":
+            myPlayer.moveLeft()
+            break;
+        case "ArrowUp":
+            myPlayer.moveUp()
+            break;
+        case "ArrowDown":
+            myPlayer.moveDown()
+            break;
+        default:
+            break;
+    }
 })
+
+
+const myPlayer = new Player

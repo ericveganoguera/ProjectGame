@@ -1,13 +1,20 @@
 body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 95vh;
+    margin: 0;
+    padding: 0;
 }
 
-canvas {
+#board {
+    height: 100vh;
+    background-color: red;
+    position: relative;
+} 
 
-    width: 80%;
-    height: 90vh;
-    border: 1px solid black
+#player {
+    background-color: orange;
+    border: 1px solid black;
+    width: 10vh;
+    height: 10vh;
+    position: absolute;
+    bottom: 0vh;
+    left: 0vh
 }
