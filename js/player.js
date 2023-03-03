@@ -5,7 +5,7 @@ class Player {
     this.initialPositionX = 100 / 2 - this.width / 2; //Centered
     this.positionX = this.initialPositionX;
     this.positionY = 5;
-    this.speedMovement = 2;
+    this.speedMovement = 0.5;
     this.playerElm = document.getElementById("player");
     this.playerElm.style.left = this.initialPositionX + "vh";
     this.playerElm.style.bottom = this.positionY + "vh";
@@ -14,24 +14,28 @@ class Player {
   }
   moveRight() {
     if (this.positionX < this.initialPositionX * 2) {
+      this.playerElm.setAttribute("class", "move-right");
       this.positionX += this.speedMovement;
       this.playerElm.style.left = this.positionX + "vh";
     }
   }
   moveLeft() {
     if (this.positionX > 0) {
+      this.playerElm.setAttribute("class", "move-left");
       this.positionX -= this.speedMovement;
       this.playerElm.style.left = this.positionX + "vh";
     }
   }
   moveUp() {
     if (this.positionY < 100 - this.height) {
+      this.playerElm.setAttribute("class", "move-up");
       this.positionY += this.speedMovement;
       this.playerElm.style.bottom = this.positionY + "vh";
     }
   }
   moveDown() {
     if (this.positionY > 1) {
+      this.playerElm.setAttribute("class", "move-down");
       this.positionY -= this.speedMovement;
       this.playerElm.style.bottom = this.positionY + "vh";
     }

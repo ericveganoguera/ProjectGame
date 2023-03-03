@@ -2,7 +2,6 @@ class Game {
   constructor() {
     this.player = null;
     this.allEnemies = [];
-    this.pause = false;
     this.audio = new Audio("./sounds/game-over.wav")
     this.keysDown = {};
     this.attachEventListeners();
@@ -16,13 +15,13 @@ class Game {
 
     //Spawn enemies every XX ms
     this.spawnEnemy = setInterval(() => {
-      const newEnemy = new Enemy(0.56);
+      const newEnemy = new Enemy(0.20);
       this.allEnemies.push(newEnemy);
     }, 2000);
 
     //Spawn faster enemy
     setInterval(() => {
-      const newEnemy = new Enemy(6);
+      const newEnemy = new Enemy(0.7);
       this.allEnemies.push(newEnemy);
     }, 6000);
 
@@ -33,7 +32,7 @@ class Game {
         element.moveDown();
         this.removeEnemy(element);
       });
-    }, 16);
+    }, 8);
   }
 
   //Player movement with arrow keys
@@ -43,6 +42,10 @@ class Game {
     });
     document.addEventListener("keyup", (event) => {
       this.keysDown[event.code] = false;
+      this.player.playerElm.removeAttribute("class", "move-right");
+      this.player.playerElm.removeAttribute("class", "move-left");
+      this.player.playerElm.removeAttribute("class", "move-up");
+      this.player.playerElm.removeAttribute("class", "move-down");
     });
     document.addEventListener("keydown",e=>{
       if (e.code === "Space"){
@@ -53,7 +56,6 @@ class Game {
   movePlayer() {
     if (this.keysDown["ArrowRight"]) {
       this.player.moveRight();
-      this.player.playerElm.setAttribute("class", "move-right");
     }
     if (this.keysDown["ArrowLeft"]) {
       this.player.moveLeft();
@@ -64,12 +66,9 @@ class Game {
     if (this.keysDown["ArrowDown"]) {
       this.player.moveDown();
     }
-    if (this.keysDown["KeyP"]) {
-      this.pause = true;
-    }
     setTimeout(() => {
       this.movePlayer();
-    }, 40);
+    }, 8);
   }
   detectCollision(element) {
     if (
