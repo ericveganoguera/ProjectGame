@@ -4,10 +4,12 @@ body {
     display: flex;
     justify-content: center;
     background-image: url(./Images/background.jpg);
+    /* background-color: gray; */
     background-size: cover;
 }
 
 #board {
+    background-color: lightgray;
     box-sizing:border-box;
     border-right: 1px solid red;
     border-left: 1px solid red;

@@ -6,7 +6,7 @@ class Player {
     this.height = 12;
     this.initialPositionX = 100 / 2 - this.width / 2; //Centered
     this.positionX = this.initialPositionX;
-    this.positionY = 0;
+    this.positionY = 5;
     this.speedMovement = 2;
     this.playerElm = document.getElementById("player");
     this.playerElm.style.left = this.initialPositionX + "vh";
@@ -27,22 +27,26 @@ class Player {
     }
   }
   moveUp() {
-    this.positionY += this.speedMovement;
-    this.playerElm.style.bottom = this.positionY + "vh";
+    if(this.positionY<100-this.height){
+      this.positionY += this.speedMovement;
+      this.playerElm.style.bottom = this.positionY + "vh";
+    }
   }
   moveDown() {
-    this.positionY -= this.speedMovement;
-    this.playerElm.style.bottom = this.positionY + "vh";
+    if(this.positionY>1){
+      this.positionY -= this.speedMovement;
+      this.playerElm.style.bottom = this.positionY + "vh";
+    }
   }
 }
 
 class Enemy {
-  constructor() {
+  constructor(speed) {
     this.width = 6;
     this.height = 6;
     this.positionX = Math.floor(Math.random() * 20) * 5;
     this.positionY = 100 + this.width;
-    this.speedMovement = 2;
+    this.speedMovement = speed
     this.createDomElement();
   }
   createDomElement() {
@@ -80,13 +84,13 @@ class Game {
 
     //Spawn enemies every XX ms
     this.spawnEnemy = setInterval(() => {
-      const newEnemy = new Enemy();
+      const newEnemy = new Enemy(2);
       game.allEnemies.push(newEnemy);
     }, 2000);
 
-    setTimeout(() => {
-      const newEnemyFast = new EnemyFast(15);
-      game.allEnemies.push(newEnemyFast);
+    setInterval(() => {
+      const newEnemy= new Enemy(6);
+      game.allEnemies.push(newEnemy);
     }, 6000);
 
     //Move the enemies down every XX ms
@@ -147,11 +151,7 @@ class Game {
     }
   }
 }
-class EnemyFast extends Enemy {
-  constructor(speedMovement) {
-    super(speedMovement);
-  }
-}
+
 
 const game = new Game();
 game.start();
