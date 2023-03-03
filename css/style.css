@@ -3,7 +3,7 @@ body {
     padding: 0;
     display: flex;
     justify-content: center;
-    background-image: url(./Images/background.jpg);
+    background-image: url(.././Images/background.jpg);
     /* background-color: gray; */
     background-size: cover;
 }
@@ -20,17 +20,22 @@ body {
 } 
 
 #player {
-    background-image: url(./Images/spaceship1.png);
+    background-image: url(.././Images/spaceship1.png);
     background-size: cover;
     position: absolute;
 }
 .enemy{
-    background-image: url(./Images/enemy1.png);
+    background-image: url(.././Images/enemy1.png);
     background-size: cover;
     position: absolute;
 }
 
 .display-window{
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background-color: lightgray;
     width: 50vh;
     height: 50vh;
     border-radius: 50px;
@@ -39,10 +44,6 @@ body {
     left: 25vh;
     top: 25vh;
     color:white;
-    display:none;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
 }
 .display-window h5{
     font-size: 6em;
@@ -51,4 +52,7 @@ body {
     font-size: 4em;
     text-decoration: none;
     color: white;
+}
+.move-right{
+    transform: rotateY(25deg);
 }
