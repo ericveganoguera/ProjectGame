@@ -74,7 +74,9 @@ class Game {
     this.player = null;
     this.allEnemies = [];
     this.pause = false;
+    this.keysDown = {}
     this.attachEventListeners();
+    this.movePlayer();
   }
 
   //Start Game
@@ -106,31 +108,32 @@ class Game {
   //Player movement with arrow keys
   attachEventListeners() {
     document.addEventListener("keydown", (event) => {
-      event.preventDefault();
-      switch (event.code) {
-        case "ArrowRight":
-        case "KeyD":
-          this.player.moveRight();
-          break;
-        case "ArrowLeft":
-        case "KeyA":
-          this.player.moveLeft();
-          break;
-        case "ArrowUp":
-        case "KeyW":
-          this.player.moveUp();
-          break;
-        case "ArrowDown":
-        case "KeyS":
-          this.player.moveDown();
-          break;
-        case "KeyP":
-          this.pause = true;
-          break;
-        case "KeyO":
-        //spawnEnemy();
-      }
+      this.keysDown[event.code] = true
     });
+    document.addEventListener("keyup",event=>{
+      this.keysDown[event.code] = false
+    })
+  }
+  movePlayer(){
+    console.log(this.keysDown)
+    if (this.keysDown["ArrowRight"]) {
+      this.player.moveRight();
+    }
+    if (this.keysDown["ArrowLeft"]) {
+      this.player.moveLeft();
+    }
+    if (this.keysDown["ArrowUp"]) {
+      this.player.moveUp();
+    }
+    if (this.keysDown["ArrowDown"]) {
+      this.player.moveDown();
+    }
+    if (this.keysDown["KeyP"]) {
+      this.pause = true;
+    }
+    setTimeout(()=>{
+      this.movePlayer()
+    },20)
   }
   detectCollision(element) {
     if (
