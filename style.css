@@ -1,16 +1,23 @@
 body {
     margin: 0;
     padding: 0;
+    display: flex;
+    justify-content: center;
+    background-image: url(./Images/background.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
 }
 
 #board {
+    border: 2px solid red;
     height: 100vh;
-    background-color: darkred;
+    width: 100vh;
     position: relative;
 } 
 
 #player {
-    background-color: orange;
+    background-image: url(./Images/spaceship1.png);
+    background-size: cover;
     position: absolute;
 }
 .enemy{
