@@ -3,6 +3,7 @@ class Game {
     this.player = null;
     this.allEnemies = [];
     this.pause = false;
+    this.audio = new Audio("./sounds/game-over.wav")
     this.keysDown = {};
     this.attachEventListeners();
     this.movePlayer();
@@ -15,7 +16,7 @@ class Game {
 
     //Spawn enemies every XX ms
     this.spawnEnemy = setInterval(() => {
-      const newEnemy = new Enemy(2);
+      const newEnemy = new Enemy(0.56);
       this.allEnemies.push(newEnemy);
     }, 2000);
 
@@ -32,7 +33,7 @@ class Game {
         element.moveDown();
         this.removeEnemy(element);
       });
-    }, 64);
+    }, 16);
   }
 
   //Player movement with arrow keys
@@ -43,6 +44,11 @@ class Game {
     document.addEventListener("keyup", (event) => {
       this.keysDown[event.code] = false;
     });
+    document.addEventListener("keydown",e=>{
+      if (e.code === "Space"){
+
+      }
+    })
   }
   movePlayer() {
     if (this.keysDown["ArrowRight"]) {
@@ -82,14 +88,15 @@ class Game {
     }
   }
   displayGameOver() {
+    this.audio.play()
     clearInterval(this.moveEnemy);
     clearInterval(this.spawnEnemy);
     this.displayGaOv = document.createElement("div");
     this.displayGaOv.setAttribute("class", "display-window");
     this.displayGaOv.innerHTML = `
-              <h5>Game over</h5>
-              <a href="#" onclick="location.reload()">Restart</a>
-      `;
+    <h5>Game over</h5>
+    <a href="#" onclick="location.reload()">Restart</a>
+    `;
     this.boardElm = document.getElementById("board");
     this.boardElm.appendChild(this.displayGaOv);
   }

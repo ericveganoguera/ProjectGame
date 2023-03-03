@@ -36,6 +36,7 @@ body {
     align-items: center;
     flex-direction: column;
     background-color: lightgray;
+    opacity: 0.9;
     width: 50vh;
     height: 50vh;
     border-radius: 50px;
