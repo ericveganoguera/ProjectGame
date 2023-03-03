@@ -14,7 +14,6 @@ In a future you'll be allow to shoot!
 
 Tasks for MVP (Minimal Value Product)
 
-- Allow Player to move diagonally
 - Allow Player to shoot
 - Spawn different enemies
 - Destroy enemies when shooted

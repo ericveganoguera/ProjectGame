@@ -47,11 +47,6 @@ class Game {
       this.player.playerElm.removeAttribute("class", "move-up");
       this.player.playerElm.removeAttribute("class", "move-down");
     });
-    document.addEventListener("keydown",e=>{
-      if (e.code === "Space"){
-
-      }
-    })
   }
   movePlayer() {
     if (this.keysDown["ArrowRight"]) {
