@@ -4,15 +4,17 @@ body {
     display: flex;
     justify-content: center;
     background-image: url(./Images/background.jpg);
-    background-repeat: no-repeat;
     background-size: cover;
 }
 
 #board {
-    border: 2px solid red;
+    box-sizing:border-box;
+    border-right: 1px solid red;
+    border-left: 1px solid red;
     height: 100vh;
     width: 100vh;
     position: relative;
+    overflow: hidden;
 } 
 
 #player {
@@ -21,6 +23,30 @@ body {
     position: absolute;
 }
 .enemy{
-    background-color: blue;
+    background-image: url(./Images/enemy1.png);
+    background-size: cover;
     position: absolute;
+}
+
+.display-window{
+    width: 50vh;
+    height: 50vh;
+    border-radius: 50px;
+    border: 5px solid red;
+    position: absolute;
+    left: 25vh;
+    top: 25vh;
+    color:white;
+    display:none;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+.display-window h5{
+    font-size: 6em;
+}
+.display-window a{
+    font-size: 4em;
+    text-decoration: none;
+    color: white;
 }
