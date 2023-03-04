@@ -2,6 +2,7 @@ class Game {
   constructor() {
     this.player = null;
     this.allEnemies = [];
+    this.allShots = [];
     this.audio = new Audio("./sounds/game-over.wav")
     this.keysDown = {};
     this.attachEventListeners();
@@ -12,6 +13,14 @@ class Game {
   start() {
     //Create the player
     this.player = new Player();
+
+    //Player shots every XX ms
+    this.spawnShot = setInterval(() => {
+      const newShotLeft = new Shot(0.20,3,5)
+      const newShotRight = new Shot(0.20,8,5)
+      this.allShots.push(newShotLeft)
+      this.allShots.push(newShotRight)
+    }, 1000);
 
     //Spawn enemies every XX ms
     this.spawnEnemy = setInterval(() => {
@@ -25,12 +34,20 @@ class Game {
       this.allEnemies.push(newEnemy);
     }, 6000);
 
+    //Move the shots
+    this.moveShot = setInterval(() => {
+      this.allShots.forEach((element,index) => {
+        element.moveUp()
+        this.removeShot(element,index)
+      })
+    }, 8);
+
     //Move the enemies down every XX ms
     this.moveEnemy = setInterval(() => {
-      this.allEnemies.forEach((element) => {
+      this.allEnemies.forEach((element,index) => {
         this.detectCollision(element);
         element.moveDown();
-        this.removeEnemy(element);
+        this.removeEnemy(element,index);
       });
     }, 8);
   }
@@ -75,10 +92,16 @@ class Game {
       this.displayGameOver();
     }
   }
-  removeEnemy(enemy) {
+  removeEnemy(enemy,index) {
     if (enemy.positionY < 0) {
       enemy.enemySpawn.remove();
-      this.allEnemies.shift();
+      this.allEnemies.splice(index,0)
+    }
+  }
+  removeShot(shot,index){
+    if (shot.positionY > 100) {
+      shot.shotSpawn.remove()
+      this.allShots.splice(index,0)
     }
   }
   displayGameOver() {

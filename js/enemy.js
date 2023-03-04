@@ -13,11 +13,11 @@ class Enemy {
     this.enemySpawn.setAttribute("style", `left:${this.positionX}vh`);
     this.boardElm = document.getElementById("board");
     this.boardElm.appendChild(this.enemySpawn);
+    this.enemySpawn.style.width = this.width + "vh";
+    this.enemySpawn.style.height = this.height + "vh";
   }
   moveDown() {
     this.positionY -= this.speedMovement;
     this.enemySpawn.style.bottom = this.positionY + "vh";
-    this.enemySpawn.style.width = this.width + "vh";
-    this.enemySpawn.style.height = this.height + "vh";
   }
 }

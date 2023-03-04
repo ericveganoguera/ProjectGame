@@ -23,7 +23,6 @@ body {
     background-image: url(../Images/spaceship1.png);
     background-size: cover;
     position: absolute;
-
 }
 .enemy{
     background-image: url(.././Images/enemy1.png);
@@ -31,9 +30,14 @@ body {
     position: absolute;
 }
 
+.shot{
+    border-radius: 30px 30px 0 0;
+    background-color: red;
+    position: absolute;
+}
 .display-window{
     display:flex;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
     flex-direction: column;
     background-color: lightgray;
@@ -48,7 +52,7 @@ body {
     color:white;
 }
 .display-window h5{
-    font-size: 6em;
+    font-size: 4em;
 }
 .display-window a{
     font-size: 4em;
@@ -56,11 +60,11 @@ body {
     color: white;
 }
 .move-right{
-    transform: perspective(800px) rotateY(50deg);
+    transform: perspective(800px) rotateY(40deg);
     transition: transform 0.2s;
 }
 .move-left{
-    transform: perspective(800px) rotateY(-50deg);
+    transform: perspective(800px) rotateY(-40deg);
     transition: transform 0.2s;
 }
 .move-up{
