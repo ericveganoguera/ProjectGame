@@ -8,6 +8,10 @@ It's a vertical spaceship shooter!
 
 Arrow Keys to move the player, it's easy!
 
+# Demo 
+
+[Project Game's demo here!](https://github.com/ericveganoguera/ProjectGame:index.html)
+
 # To-Do
 
 Tasks for MVP (Minimal Value Product)
@@ -15,7 +19,6 @@ Tasks for MVP (Minimal Value Product)
 - Spawn different enemies
 - The player has to have lives
 - Add Sounds
-- Web Demo version
 
 Tasks for a better game
 
