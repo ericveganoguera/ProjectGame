@@ -8,10 +8,17 @@ class Game {
     this.speedShot = 700;
     this.score = document.getElementById("score")
   }
+  intro(){
 
+
+  }
+  spaceshipSelector(){
+
+  }
   //Start Game
   start() {
-    //Create the player
+    this.title= document.getElementById("intro")
+    this.title.setAttribute("style","display:none")
     this.player = new Player();
     this.spawnShot();
     this.spawnEnemy(0.4, 800);
@@ -137,7 +144,7 @@ class Game {
     this.displayEnd.setAttribute("class", "display-window");
     this.displayEnd.innerHTML = `
     <h5>Game over</h5>
-    <a href="#" onclick="location.reload()">Restart</a>
+    <a href="#" onclick="start()">Restart</a>
     `;
     this.boardElm = document.getElementById("board");
     this.boardElm.appendChild(this.displayEnd);
