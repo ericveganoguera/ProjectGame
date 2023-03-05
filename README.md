@@ -10,7 +10,7 @@ Arrow Keys to move the player, it's easy!
 
 # Demo 
 
-[Project Game's demo here!](https://github.com/ericveganoguera/ProjectGame)
+[Project Game's demo here!](https://ericveganoguera.github.io/ProjectGame/)
 
 # To-Do
 
