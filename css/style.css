@@ -1,3 +1,12 @@
+@keyframes scroll {
+    0% {
+        background-position: bottom;
+    }
+    100% {
+        background-position: top;
+    }
+}
+
 body {
     margin: 0;
     padding: 0;
@@ -9,7 +18,10 @@ body {
 }
 
 #board {
-    background-color: lightgray;
+    /* background-color: lightgray; */
+    background-image: url(../assets/background1.png);
+    background-repeat: repeat-y;
+    background-size: 100%;
     box-sizing:border-box;
     border-right: 1px solid red;
     border-left: 1px solid red;
@@ -17,6 +29,7 @@ body {
     width: 100vh;
     position: relative;
     overflow: hidden;
+    animation: scroll 1s linear infinite;
 } 
 
 #player {
@@ -62,6 +75,7 @@ body {
 #board p{
     font-size: 2vw;
     margin: 20px;
+    color: white;
 }
 .move-right{
     transform: perspective(800px) rotateY(40deg);

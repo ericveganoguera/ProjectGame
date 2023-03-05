@@ -22,8 +22,10 @@ Tasks for MVP (Minimal Value Product)
 
 Tasks for a better game
 
+- Modify the player's div to 2 div for better collision
 - Enemies shoot often
 - Differents spaceships
+- Add bonus items
 - Add bosses
 - Some levels with bosses
 - Make 2 divs for the player 
