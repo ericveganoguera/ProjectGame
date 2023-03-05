@@ -3,7 +3,7 @@ class Enemy {
     this.width = 6;
     this.height = 6;
     this.positionX = Math.floor(Math.random() * 20) * 5;
-    this.positionY = 100 + this.width;
+    this.positionY = 110 + this.width;
     this.speedMovement = speed;
     this.createDomElement();
   }

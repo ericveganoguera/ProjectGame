@@ -59,6 +59,10 @@ body {
     text-decoration: none;
     color: white;
 }
+#board p{
+    font-size: 2vw;
+    margin: 20px;
+}
 .move-right{
     transform: perspective(800px) rotateY(40deg);
     transition: transform 0.2s;

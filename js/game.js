@@ -3,67 +3,45 @@ class Game {
     this.player = null;
     this.allEnemies = [];
     this.allShots = [];
-    this.audio = new Audio("./sounds/game-over.wav")
+    this.audio = new Audio("./sounds/game-over.wav");
     this.keysDown = {};
-    this.attachEventListeners();
-    this.movePlayer();
+    this.speedShot = 700;
+    this.score = document.getElementById("score")
   }
 
   //Start Game
   start() {
     //Create the player
     this.player = new Player();
-
-    //Player shots every XX ms
-    this.spawnShot = setInterval(() => {
-      const newShotLeft = new Shot(0.20,3,5)
-      const newShotRight = new Shot(0.20,8,5)
-      this.allShots.push(newShotLeft)
-      this.allShots.push(newShotRight)
-    }, 1000);
-
-    //Spawn enemies every XX ms
-    this.spawnEnemy = setInterval(() => {
-      const newEnemy = new Enemy(0.20);
-      this.allEnemies.push(newEnemy);
-    }, 2000);
-
-    //Spawn faster enemy
-    setInterval(() => {
-      const newEnemy = new Enemy(0.7);
-      this.allEnemies.push(newEnemy);
-    }, 6000);
-
-    //Move the shots
-    this.moveShot = setInterval(() => {
-      this.allShots.forEach((element,index) => {
-        element.moveUp()
-        this.removeShot(element,index)
-      })
-    }, 8);
-
-    //Move the enemies down every XX ms
-    this.moveEnemy = setInterval(() => {
-      this.allEnemies.forEach((element,index) => {
-        this.detectCollision(element);
-        element.moveDown();
-        this.removeEnemy(element,index);
-      });
-    }, 8);
+    this.spawnShot();
+    this.spawnEnemy(0.4, 800);
+    this.moveEnemy();
+    this.moveShot(0.8);
+    this.attachEventListeners();
+    this.movePlayer();
   }
-
-  //Player movement with arrow keys
-  attachEventListeners() {
-    document.addEventListener("keydown", (event) => {
-      this.keysDown[event.code] = true;
-    });
-    document.addEventListener("keyup", (event) => {
-      this.keysDown[event.code] = false;
-      this.player.playerElm.removeAttribute("class", "move-right");
-      this.player.playerElm.removeAttribute("class", "move-left");
-      this.player.playerElm.removeAttribute("class", "move-up");
-      this.player.playerElm.removeAttribute("class", "move-down");
-    });
+  moveShot(speed) {
+    //Move the shots
+    setInterval(() => {
+      this.allShots.forEach((shot, index) => {
+        shot.moveUp(speed);
+        if (shot.positionY > 100) {
+          this.removeShot(shot, index);
+        }
+      });
+    }, 16);
+  }
+  moveEnemy() {
+    //Move the enemies down every XX ms
+    this.movementEnemy = setInterval(() => {
+      this.allEnemies.forEach((enemy, indexEnemy) => {
+        if (enemy.positionY < 0) {
+          this.removeEnemy(enemy, indexEnemy);
+        }
+        this.detectCollision(enemy, indexEnemy);
+        enemy.moveDown();
+      });
+    }, 16);
   }
   movePlayer() {
     if (this.keysDown["ArrowRight"]) {
@@ -82,39 +60,86 @@ class Game {
       this.movePlayer();
     }, 8);
   }
-  detectCollision(element) {
+  spawnEnemy(movementSpeed, spawnInterval) {
+    //Spawn enemies every spawnInterval with movementSpeed
+    this.spawnerEnemy = setInterval(() => {
+      const newEnemy = new Enemy(movementSpeed);
+      this.allEnemies.push(newEnemy);
+    }, spawnInterval);
+  }
+  spawnShot() {
+    //Player shots every XX ms
+    this.spawnerShot = setInterval(() => {
+      const newShotLeft = new Shot(
+        this.player.positionX + 3,
+        this.player.positionY + 5
+      );
+      const newShotRight = new Shot(
+        this.player.positionX + 8,
+        this.player.positionY + 5
+      );
+      this.allShots.push(newShotLeft);
+      this.allShots.push(newShotRight);
+    }, this.speedShot);
+  }
+  attachEventListeners() {
+    //Player movement with arrow keys
+    document.addEventListener("keydown", (event) => {
+      this.keysDown[event.code] = true;
+    });
+    document.addEventListener("keyup", (event) => {
+      this.keysDown[event.code] = false;
+      this.player.playerElm.removeAttribute("class", "move-right");
+      this.player.playerElm.removeAttribute("class", "move-left");
+      this.player.playerElm.removeAttribute("class", "move-up");
+      this.player.playerElm.removeAttribute("class", "move-down");
+    });
+  }
+  detectCollision(enemy, indexEnemy) {
     if (
-      element.positionX < this.player.positionX + this.player.width &&
-      element.positionX + element.width > this.player.positionX &&
-      element.positionY < this.player.positionY + this.player.height &&
-      element.height + element.positionY > this.player.positionY
+      enemy.positionX < this.player.positionX + this.player.width &&
+      enemy.positionX + enemy.width > this.player.positionX &&
+      enemy.positionY < this.player.positionY + this.player.height &&
+      enemy.height + enemy.positionY > this.player.positionY
     ) {
       this.displayGameOver();
     }
+    this.allShots.forEach((shot,index) => {
+      if (
+        enemy.positionX < shot.positionX + shot.width &&
+        enemy.positionX + enemy.width > shot.positionX &&
+        enemy.positionY < shot.positionY + shot.height &&
+        enemy.positionY + enemy.height > shot.positionY
+      ) {
+        this.removeShot(shot,index)
+        this.removeEnemy(enemy,indexEnemy)
+        this.score.innerHTML++
+      }
+    });
   }
-  removeEnemy(enemy,index) {
-    if (enemy.positionY < 0) {
-      enemy.enemySpawn.remove();
-      this.allEnemies.splice(index,0)
-    }
+  removeEnemy(enemy, index) {
+    enemy.enemySpawn.remove();
+    this.allEnemies.splice(index, 1);
   }
-  removeShot(shot,index){
-    if (shot.positionY > 100) {
-      shot.shotSpawn.remove()
-      this.allShots.splice(index,0)
-    }
+  removeShot(shot, index) {
+      shot.shotSpawn.remove();
+      this.allShots.splice(index, 1);
+  }
+  clearIntervals() {
+    clearInterval(this.spawnerShot);
+    clearInterval(this.spawnerEnemy);
+    clearInterval(this.movementEnemy);
   }
   displayGameOver() {
-    this.audio.play()
-    clearInterval(this.moveEnemy);
-    clearInterval(this.spawnEnemy);
-    this.displayGaOv = document.createElement("div");
-    this.displayGaOv.setAttribute("class", "display-window");
-    this.displayGaOv.innerHTML = `
+    this.audio.play();
+    this.clearIntervals();
+    this.displayEnd = document.createElement("div");
+    this.displayEnd.setAttribute("class", "display-window");
+    this.displayEnd.innerHTML = `
     <h5>Game over</h5>
     <a href="#" onclick="location.reload()">Restart</a>
     `;
     this.boardElm = document.getElementById("board");
-    this.boardElm.appendChild(this.displayGaOv);
+    this.boardElm.appendChild(this.displayEnd);
   }
 }
