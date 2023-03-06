@@ -3,12 +3,13 @@ class Game {
     this.player = null;
     this.allEnemies = [];
     this.allShots = [];
+    this.allBonus = []
+    this.speedSpawnShot = 700;
     this.audioGameOver = new Audio("./sounds/game-over.wav");
     this.audioBackgroundGame = new Audio("./sounds/background-game.mp3");
     this.audioEnemyDie = new Audio("./sounds/enemy-die.wav");
     this.audioMenu = new Audio("./sounds/background-menu.wav");
     this.keysDown = {};
-    this.speedShot = 700;
     this.score = document.getElementById("score");
     this.boardElm = document.getElementById("board");
   }
@@ -42,12 +43,15 @@ class Game {
   //Start Game
   start() {
     this.menu.remove();
+    this.audioBackgroundGame.loop = true
     this.audioBackgroundGame.play();
     this.player = new Player();
     this.spawnShot();
     this.spawnEnemy(0.4, 800);
+    this.spawnBonus();
     this.moveEnemy();
     this.moveShot(0.8);
+    this.moveBonus();
     this.attachEventListeners();
     this.movePlayer();
   }
@@ -91,6 +95,17 @@ class Game {
       this.movePlayer();
     }, 8);
   }
+  moveBonus(){
+    this.movementBonus = setInterval(() => {
+      this.allBonus.forEach((bonus,indexBonus) => {
+        bonus.moveDown();
+        if (bonus.positionY<0){
+          this.removeBonus(bonus,indexBonus)
+        }
+        this.detectCollisionBonus(bonus,indexBonus)
+      })
+    }, 16);
+  }
   spawnEnemy(movementSpeed, spawnInterval) {
     //Spawn enemies every spawnInterval with movementSpeed
     this.spawnerEnemy = setInterval(() => {
@@ -111,7 +126,14 @@ class Game {
       );
       this.allShots.push(newShotLeft);
       this.allShots.push(newShotRight);
-    }, this.speedShot);
+    }, this.speedSpawnShot);
+    console.log("X"+this.speedSpawnShot)
+  }
+  spawnBonus(){
+    this.spawnerBonus = setInterval(() => {
+      const newBonus = new Bonus()
+      this.allBonus.push(newBonus)
+    }, 20000);
   }
   attachEventListeners() {
     //Player movement with arrow keys
@@ -149,6 +171,20 @@ class Game {
       }
     });
   }
+  detectCollisionBonus(bonus,index){
+    if (
+      bonus.positionX < this.player.positionX + this.player.width &&
+      bonus.positionX + bonus.width > this.player.positionX &&
+      bonus.positionY < this.player.positionY + this.player.height &&
+      bonus.height + bonus.positionY > this.player.positionY
+    ) {
+      this.removeBonus(bonus,index)
+      clearInterval(this.spawnerShot)
+      this.speedSpawnShot -= (this.speedSpawnShot/100)*10
+      this.spawnShot();
+      console.log(this.speedSpawnShot)
+    }
+  }
   removeEnemy(enemy, index) {
     enemy.enemySpawn.remove();
     this.allEnemies.splice(index, 1);
@@ -157,10 +193,16 @@ class Game {
     shot.shotSpawn.remove();
     this.allShots.splice(index, 1);
   }
+  removeBonus(bonus, index) {
+    bonus.bonusSpawn.remove();
+    this.allBonus.splice(index, 1);
+  }
   clearIntervals() {
     clearInterval(this.spawnerShot);
     clearInterval(this.spawnerEnemy);
     clearInterval(this.movementEnemy);
+    clearInterval(this.movementBonus);
+    clearInterval(this.spawnerBonus);
   }
   displayGameOver() {
     this.audioGameOver.play();

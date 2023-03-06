@@ -18,6 +18,6 @@ class Bonus {
   }
   moveDown() {
     this.positionY -= this.speedMovement;
-    this.enemySpawn.style.bottom = this.positionY + "vh";
+    this.bonusSpawn.style.bottom = this.positionY + "vh";
   }
 }

@@ -162,3 +162,9 @@ body {
     background-size: cover;
     cursor: pointer;
 }
+
+.bonus{
+    background-color: blue;
+    background-size: cover;
+    position: absolute;
+}
