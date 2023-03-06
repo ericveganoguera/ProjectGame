@@ -23,7 +23,7 @@ class Game {
     <div id="instructions">
     <div id="movement">
     <img src="./assets/arrows.png" alt="img-movement" draggable="false">
-    <p>Use your arrow yes to move!</p>
+    <p>Use your arrow to move!</p>
     </div>
     <div>
     <a href="#" onclick="start()"draggable="false">START</a>
@@ -48,7 +48,7 @@ class Game {
     this.audioBackgroundGame.play();
     this.player = new Player();
     this.spawnShot();
-    this.spawnEnemy(0.4, 800);
+    this.spawnEnemy(0.4,800);
     this.spawnBonus();
     this.moveEnemy();
     this.moveShot(0.8);
@@ -113,6 +113,14 @@ class Game {
       const newEnemy = new Enemy(movementSpeed);
       this.allEnemies.push(newEnemy);
     }, spawnInterval);
+    this.spawnerBoss = setTimeout(()=>{
+      clearInterval(this.spawnerShot)
+      clearInterval(this.spawnerEnemy)
+      setTimeout(()=>{
+        const newBoss = new Boss(0.2)
+        this.allEnemies.push(newBoss)
+      },5000)
+    },10000)
   }
   spawnShot() {
     //Player shots every XX ms
