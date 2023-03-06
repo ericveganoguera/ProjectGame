@@ -4,23 +4,45 @@ class Game {
     this.allEnemies = [];
     this.allShots = [];
     this.audioGameOver = new Audio("./sounds/game-over.wav");
-    this.audioBackgroundGame = new Audio("./sounds/background-game.mp3")
-    this.audioEnemyDie = new Audio("./sounds/enemy-die.wav")
+    this.audioBackgroundGame = new Audio("./sounds/background-game.mp3");
+    this.audioEnemyDie = new Audio("./sounds/enemy-die.wav");
+    this.audioMenu = new Audio("./sounds/background-menu.wav");
     this.keysDown = {};
     this.speedShot = 700;
-    this.score = document.getElementById("score")
+    this.score = document.getElementById("score");
+    this.boardElm = document.getElementById("board");
   }
-  intro(){
-    this.start()
+  intro() {
+    this.menu = document.createElement("div");
+    this.menu.setAttribute("id", "intro");
+    this.menu.innerHTML = `
+    <div id="title"></div>
+    <h1>SPACESHIP SHOOTER</h1>
+    <div id="instructions">
+    <div id="movement">
+    <img src="./assets/arrows.png" alt="img-movement" draggable="false">
+    <p>Use your arrow yes to move!</p>
+    </div>
+    <div>
+    <a href="#" onclick="start()"draggable="false">START</a>
+    </div>
+    </div>
+    `;
+    this.boardElm.prepend(this.menu);
+    this.audioMenu.loop = true;
+    this.audioMenu.play();
   }
-  spaceshipSelector(){
-    
+  spaceshipSelector() {}
+  stopMusic(){
+    this.audioBackgroundGame.pause()
+    this.audioEnemyDie.pause()
+    this.audioGameOver.pause()
+    this.audioMenu.pause()
   }
   //Start Game
   start() {
-    this.title= document.getElementById("intro")
-    this.title.setAttribute("style","display:none")
-    this.audioBackgroundGame.play()
+    this.menu.remove();
+    this.audioBackgroundGame.play();
     this.player = new Player();
     this.spawnShot();
     this.spawnEnemy(0.4, 800);
@@ -111,19 +133,19 @@ class Game {
       enemy.positionY < this.player.positionY + this.player.height &&
       enemy.height + enemy.positionY > this.player.positionY
     ) {
-      // this.displayGameOver();
+      this.displayGameOver();
     }
-    this.allShots.forEach((shot,index) => {
+    this.allShots.forEach((shot, index) => {
       if (
         enemy.positionX < shot.positionX + shot.width &&
         enemy.positionX + enemy.width > shot.positionX &&
         enemy.positionY < shot.positionY + shot.height &&
         enemy.positionY + enemy.height > shot.positionY
       ) {
-        this.removeShot(shot,index)
-        this.removeEnemy(enemy,indexEnemy)
-        this.audioEnemyDie.play()
-        this.score.innerHTML++
+        this.removeShot(shot, index);
+        this.removeEnemy(enemy, indexEnemy);
+        this.audioEnemyDie.play();
+        this.score.innerHTML++;
       }
     });
   }
@@ -132,8 +154,8 @@ class Game {
     this.allEnemies.splice(index, 1);
   }
   removeShot(shot, index) {
-      shot.shotSpawn.remove();
-      this.allShots.splice(index, 1);
+    shot.shotSpawn.remove();
+    this.allShots.splice(index, 1);
   }
   clearIntervals() {
     clearInterval(this.spawnerShot);
@@ -149,7 +171,6 @@ class Game {
     <h5>Game over</h5>
     <a href="#" onclick="location.reload()">Back to menu</a>
     `;
-    this.boardElm = document.getElementById("board");
     this.boardElm.appendChild(this.displayEnd);
   }
 }
