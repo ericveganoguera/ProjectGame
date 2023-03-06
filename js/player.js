@@ -11,17 +11,7 @@ class Player {
     this.playerElm.style.bottom = this.positionY + "vh";
     this.playerElm.style.width = this.width + "vh";
     this.playerElm.style.height = this.height + "vh";
-    // this.createDomElement();
   }
-  // createDomElement(){
-  //   this.playerSpawn = document.createElement("div");
-  //   this.playerSpawn.setAttribute("class", "player");
-  //   this.playerSpawn.setAttribute("style", `left:${this.initialPositionX}vh`);
-  //   this.boardElm = document.getElementById("board");
-  //   this.boardElm.appendChild(this.playerSpawn);
-  //   this.playerSpawn.style.width = this.width + "vh";
-  //   this.playerSpawn.style.height = this.height + "vh";
-  // }
   moveRight() {
     if (this.positionX < this.initialPositionX * 2) {
       this.playerElm.setAttribute("class", "move-right");

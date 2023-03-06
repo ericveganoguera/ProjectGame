@@ -21,4 +21,3 @@ class Enemy {
     this.enemySpawn.style.bottom = this.positionY + "vh";
   }
 }
- 

@@ -29,6 +29,7 @@ Tasks for a better game
 - Add bosses
 - Some levels with bosses
 - Make 2 divs for the player 
+- Make smth to slow the time
 
 # Fix
 

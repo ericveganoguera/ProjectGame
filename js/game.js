@@ -9,11 +9,10 @@ class Game {
     this.score = document.getElementById("score")
   }
   intro(){
-
-
+    this.start()
   }
   spaceshipSelector(){
-
+    
   }
   //Start Game
   start() {
@@ -144,7 +143,7 @@ class Game {
     this.displayEnd.setAttribute("class", "display-window");
     this.displayEnd.innerHTML = `
     <h5>Game over</h5>
-    <a href="#" onclick="start()">Restart</a>
+    <a href="#" onclick="location.reload()">Back to menu</a>
     `;
     this.boardElm = document.getElementById("board");
     this.boardElm.appendChild(this.displayEnd);

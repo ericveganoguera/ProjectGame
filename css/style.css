@@ -23,19 +23,17 @@ body {
     background-repeat: repeat-y;
     background-size: 100%;
     box-sizing:border-box;
-    border-right: 1px solid red;
-    border-left: 1px solid red;
     height: 100vh;
     width: 100vh;
     position: relative;
     overflow: hidden;
     animation: scroll 1s linear infinite;
-} 
-
+}
 #player {
     background-image: url(../Images/spaceship1.png);
     background-size: cover;
     position: absolute;
+
 }
 .enemy{
     background-image: url(.././Images/enemy1.png);
@@ -94,25 +92,49 @@ body {
     transition: transform 0.2s;
 }
 #intro{
-    background-color: red;
+    background-image: url(../assets/background-title.jpg);
+    background-size: cover;
     display: flex;
-    justify-content: center;
     flex-direction: column;
     align-items: center;
-    position: absolute;
     width: 100%;
     height: 100%;
 }
 #intro h1{
-    font-size: 4vw;
+    margin-top: 12%;
+    font-size: 6vw;
+    font-weight: 600;
+    color: #fdfdfe;
+    text-shadow: 0px 0px 5px #b393d3, 0px 0px 10px #b393d3, 0px 0px 10px #b393d3,
+      0px 0px 20px #b393d3;
 }
 #instructions{
     display: flex;
     justify-content: center;
-    flex-direction: column;
     align-items: center;
+    margin-top: 5%;
+    gap: 10%;
+    width: 100%;
 }
 #instructions a{
     text-decoration: none;
+    font-weight: bold;
     font-size: 8vw;
+    color: #fdfdfe;
+    text-shadow: 0px 0px 5px black, 0px 0px 10px black, 0px 0px 10px black,
+      0px 0px 20px black;
+}
+#instructions div a:hover{
+    color: #fdfdfe;
+    text-shadow: 0px 0px 5px #b41d1d, 0px 0px 10px #b41d1d, 0px 0px 10px #b41d1d,
+      0px 0px 20px #b41d1d;
+}
+#instructions a:visited{
+    color: #fdfdfe;
+}
+#movement{
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    gap: 20px;
 }
