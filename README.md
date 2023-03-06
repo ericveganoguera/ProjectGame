@@ -18,17 +18,15 @@ Tasks for MVP (Minimal Value Product)
 
 - Spawn different enemies
 - The player has to have lives
-- Add Sounds
 
 Tasks for a better game
 
+- Add more bonus items
 - Modify the player's div to 2 div for better collision
 - Enemies shoot often
 - Differents spaceships
-- Add bonus items
 - Add bosses
 - Some levels with bosses
-- Make 2 divs for the player 
 - Make smth to slow the time
 
 # Fix

@@ -1,7 +1,7 @@
 class Game {
   constructor() {
     this.player = null;
-    this.allEnemies = [];
+    this.allEnemies = []; 
     this.allShots = [];
     this.allBonus = []
     this.speedSpawnShot = 700;
@@ -9,6 +9,7 @@ class Game {
     this.audioBackgroundGame = new Audio("./sounds/background-game.mp3");
     this.audioEnemyDie = new Audio("./sounds/enemy-die.wav");
     this.audioMenu = new Audio("./sounds/background-menu.wav");
+    this.audioBonusUp = new Audio("./sounds/bonus-up.ogg")
     this.keysDown = {};
     this.score = document.getElementById("score");
     this.boardElm = document.getElementById("board");
@@ -76,7 +77,7 @@ class Game {
         this.detectCollision(enemy, indexEnemy);
         enemy.moveDown();
       });
-    }, 16);
+    }, 32);
   }
   movePlayer() {
     if (this.keysDown["ArrowRight"]) {
@@ -104,7 +105,7 @@ class Game {
         }
         this.detectCollisionBonus(bonus,indexBonus)
       })
-    }, 16);
+    }, 32);
   }
   spawnEnemy(movementSpeed, spawnInterval) {
     //Spawn enemies every spawnInterval with movementSpeed
@@ -179,6 +180,7 @@ class Game {
       bonus.height + bonus.positionY > this.player.positionY
     ) {
       this.removeBonus(bonus,index)
+      this.audioBonusUp.play()
       clearInterval(this.spawnerShot)
       this.speedSpawnShot -= (this.speedSpawnShot/100)*10
       this.spawnShot();

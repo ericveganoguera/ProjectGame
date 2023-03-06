@@ -29,7 +29,7 @@ body {
     width: 100vh;
     position: relative;
     overflow: hidden;
-    animation: scroll 1s linear infinite;
+    animation: scroll 3s linear infinite;
 }
 #player {
     background-image: url(../Images/spaceship1.png);
