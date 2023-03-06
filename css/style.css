@@ -12,15 +12,17 @@ body {
     padding: 0;
     display: flex;
     justify-content: center;
-    background-image: url(.././Images/background.jpg);
+    background-image: url(../Images/background.jpg);
     /* background-color: gray; */
     background-size: cover;
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none; /* IE 10 and IE 11 */
+    user-select: none; /* Standard syntax */
 }
 
 #board {
     /* background-color: lightgray; */
     background-image: url(../assets/background1.png);
-    background-repeat: repeat-y;
     background-size: 100%;
     box-sizing:border-box;
     height: 100vh;
@@ -31,7 +33,8 @@ body {
 }
 #player {
     background-image: url(../Images/spaceship1.png);
-    background-size: cover;
+    background-size:cover;
+    background-repeat: no-repeat;
     position: absolute;
 
 }
@@ -42,8 +45,11 @@ body {
 }
 
 .shot{
-    border-radius: 30px 30px 0 0;
-    background-color: red;
+    /* background-color: red; */
+    background-position: center;
+    background-image: url(../assets/shot1.png);
+    background-size: cover;
+    transform: rotate(-90deg);
     position: absolute;
 }
 .display-window{
@@ -61,6 +67,7 @@ body {
     left: 25vh;
     top: 25vh;
     color:white;
+    
 }
 .display-window h5{
     font-size: 4em;
@@ -137,4 +144,8 @@ body {
     flex-direction: column;
     text-align: center;
     gap: 20px;
+    width: 20vw;
+}
+#movement p{
+    font-size: 3vw;
 }

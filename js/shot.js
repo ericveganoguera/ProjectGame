@@ -1,6 +1,6 @@
 class Shot {
     constructor(positionX,positionY){
-        this.width = 0.4;
+        this.width = 4;
         this.height = 2;
         this.positionX = positionX
         this.positionY = positionY

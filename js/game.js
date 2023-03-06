@@ -3,7 +3,9 @@ class Game {
     this.player = null;
     this.allEnemies = [];
     this.allShots = [];
-    this.audio = new Audio("./sounds/game-over.wav");
+    this.audioGameOver = new Audio("./sounds/game-over.wav");
+    this.audioBackgroundGame = new Audio("./sounds/background-game.mp3")
+    this.audioEnemyDie = new Audio("./sounds/enemy-die.wav")
     this.keysDown = {};
     this.speedShot = 700;
     this.score = document.getElementById("score")
@@ -18,6 +20,7 @@ class Game {
   start() {
     this.title= document.getElementById("intro")
     this.title.setAttribute("style","display:none")
+    this.audioBackgroundGame.play()
     this.player = new Player();
     this.spawnShot();
     this.spawnEnemy(0.4, 800);
@@ -77,12 +80,12 @@ class Game {
     //Player shots every XX ms
     this.spawnerShot = setInterval(() => {
       const newShotLeft = new Shot(
-        this.player.positionX + 3,
-        this.player.positionY + 5
+        this.player.positionX + 2,
+        this.player.positionY + 3
       );
       const newShotRight = new Shot(
-        this.player.positionX + 8,
-        this.player.positionY + 5
+        this.player.positionX + 6,
+        this.player.positionY + 3
       );
       this.allShots.push(newShotLeft);
       this.allShots.push(newShotRight);
@@ -108,7 +111,7 @@ class Game {
       enemy.positionY < this.player.positionY + this.player.height &&
       enemy.height + enemy.positionY > this.player.positionY
     ) {
-      this.displayGameOver();
+      // this.displayGameOver();
     }
     this.allShots.forEach((shot,index) => {
       if (
@@ -119,6 +122,7 @@ class Game {
       ) {
         this.removeShot(shot,index)
         this.removeEnemy(enemy,indexEnemy)
+        this.audioEnemyDie.play()
         this.score.innerHTML++
       }
     });
@@ -137,7 +141,7 @@ class Game {
     clearInterval(this.movementEnemy);
   }
   displayGameOver() {
-    this.audio.play();
+    this.audioGameOver.play();
     this.clearIntervals();
     this.displayEnd = document.createElement("div");
     this.displayEnd.setAttribute("class", "display-window");
