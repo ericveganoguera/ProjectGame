@@ -5,7 +5,7 @@ class Player {
     this.initialPositionX = 100 / 2 - this.width / 2; //Centered
     this.positionX = this.initialPositionX;
     this.positionY = 5;
-    this.speedMovement = 0.5;
+    this.speedMovement = 0.5
     this.playerElm = document.getElementById("player");
     this.playerElm.style.left = this.initialPositionX + "vh";
     this.playerElm.style.bottom = this.positionY + "vh";

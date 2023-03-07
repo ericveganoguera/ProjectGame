@@ -1,10 +1,11 @@
 class Game {
-  constructor() {
+  constructor(speed) {
     this.player = null;
     this.allEnemies = []; 
     this.allShots = [];
     this.allBonus = []
     this.speedSpawnShot = 700;
+    this.speedMovement = speed
     this.audioGameOver = new Audio("./sounds/game-over.wav");
     this.audioBackgroundGame = new Audio("./sounds/background-game.mp3");
     this.audioEnemyDie = new Audio("./sounds/enemy-die.wav");
@@ -25,7 +26,7 @@ class Game {
     <img src="./assets/arrows.png" alt="img-movement" draggable="false">
     <p>Use your arrow to move!</p>
     </div>
-    <div>
+    <div id="start-button">
     <a href="#" onclick="start()"draggable="false">START</a>
     </div>
     </div>
@@ -34,14 +35,15 @@ class Game {
     this.audioMenu.loop = true;
     this.audioMenu.play();
   }
-  spaceshipSelector() {}
+  spaceshipSelector() {
+
+  }
   stopMusic(){
     this.audioBackgroundGame.pause()
     this.audioEnemyDie.pause()
     this.audioGameOver.pause()
     this.audioMenu.pause()
   }
-  //Start Game
   start() {
     this.menu.remove();
     this.audioBackgroundGame.loop = true
@@ -50,11 +52,50 @@ class Game {
     this.spawnShot();
     this.spawnEnemy(0.4,800);
     this.spawnBonus();
+    this.spawnBoss();
     this.moveEnemy();
     this.moveShot(0.8);
     this.moveBonus();
     this.attachEventListeners();
     this.movePlayer();
+  }
+  spawnEnemy(movementSpeed, spawnInterval) {
+    //Spawn enemies every spawnInterval with movementSpeed
+    this.spawnerEnemy = setInterval(() => {
+      const newEnemy = new Enemy(movementSpeed);
+      this.allEnemies.push(newEnemy);
+    }, spawnInterval);
+  }
+  spawnBoss(){
+    this.spawnerBoss = setTimeout(()=>{
+      clearInterval(this.spawnerEnemy)
+      setTimeout(()=>{
+        const newBoss = new Boss(0.2)
+        this.allEnemies.push(newBoss)
+      },10000)
+    },2000)
+  }
+  spawnShot() {
+    //Player shots every XX ms
+    this.spawnerShot = setInterval(() => {
+      const newShotLeft = new Shot(
+        this.player.positionX + 2,
+        this.player.positionY + 3
+      );
+      const newShotRight = new Shot(
+        this.player.positionX + 6,
+        this.player.positionY + 3
+      );
+      this.allShots.push(newShotLeft);
+      this.allShots.push(newShotRight);
+    }, this.speedSpawnShot);
+  }
+  spawnBonus(){
+    this.spawnerBonus = setInterval(() => {
+      this.randomBonus = Math.floor(Math.random() * 4) + 1;
+      const newBonus = new Bonus(this.randomBonus)
+      this.allBonus.push(newBonus)
+    }, 2000);
   }
   moveShot(speed) {
     //Move the shots
@@ -107,43 +148,6 @@ class Game {
       })
     }, 32);
   }
-  spawnEnemy(movementSpeed, spawnInterval) {
-    //Spawn enemies every spawnInterval with movementSpeed
-    this.spawnerEnemy = setInterval(() => {
-      const newEnemy = new Enemy(movementSpeed);
-      this.allEnemies.push(newEnemy);
-    }, spawnInterval);
-    this.spawnerBoss = setTimeout(()=>{
-      clearInterval(this.spawnerShot)
-      clearInterval(this.spawnerEnemy)
-      setTimeout(()=>{
-        const newBoss = new Boss(0.2)
-        this.allEnemies.push(newBoss)
-      },5000)
-    },10000)
-  }
-  spawnShot() {
-    //Player shots every XX ms
-    this.spawnerShot = setInterval(() => {
-      const newShotLeft = new Shot(
-        this.player.positionX + 2,
-        this.player.positionY + 3
-      );
-      const newShotRight = new Shot(
-        this.player.positionX + 6,
-        this.player.positionY + 3
-      );
-      this.allShots.push(newShotLeft);
-      this.allShots.push(newShotRight);
-    }, this.speedSpawnShot);
-    console.log("X"+this.speedSpawnShot)
-  }
-  spawnBonus(){
-    this.spawnerBonus = setInterval(() => {
-      const newBonus = new Bonus()
-      this.allBonus.push(newBonus)
-    }, 20000);
-  }
   attachEventListeners() {
     //Player movement with arrow keys
     document.addEventListener("keydown", (event) => {
@@ -189,10 +193,29 @@ class Game {
     ) {
       this.removeBonus(bonus,index)
       this.audioBonusUp.play()
-      clearInterval(this.spawnerShot)
-      this.speedSpawnShot -= (this.speedSpawnShot/100)*10
-      this.spawnShot();
-      console.log(this.speedSpawnShot)
+      this.selectBonus(this.randomBonus)
+    }
+  }
+  selectBonus(modify) {
+    switch (modify) {
+      case 1:
+        //More atack speed!!!
+        if (this.speedSpawnShot>300) {
+          clearInterval(this.spawnerShot)
+          this.speedSpawnShot -= 50;
+          this.spawnShot()
+        }
+        break;
+        case 2:
+          //More speed movement
+        if (this.player.speedMovement < 1.5) {
+          this.player.speedMovement+=0.1
+        }
+        break;
+      case 3:
+        break;
+      case 4:
+        break;
     }
   }
   removeEnemy(enemy, index) {
@@ -220,7 +243,8 @@ class Game {
     this.displayEnd = document.createElement("div");
     this.displayEnd.setAttribute("class", "display-window");
     this.displayEnd.innerHTML = `
-    <h5>Game over</h5>
+    <h1>Game over</h1>
+    <p>Score : ${this.score.innerHTML}</p>
     <a href="#" onclick="location.reload()">Back to menu</a>
     `;
     this.boardElm.appendChild(this.displayEnd);
