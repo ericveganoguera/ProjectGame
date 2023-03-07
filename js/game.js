@@ -10,10 +10,10 @@ class Game {
     this.timeoutTimes = [];
     this.intervalIds = [];
     this.timeoutIds = [];
-    this.isPaused = false;
+    this.playerDamageDelay = false
     this.keysDown = {};
-    this.volumeMusic = 1;
-    this.volumeEffects = 1;
+    this.volumeMusic = 0.5;
+    this.volumeEffects = 0.5;
     this.getElementsDOM();
     this.audios();
     this.reloadVolumeAudios();
@@ -77,14 +77,6 @@ class Game {
     this.audioMenu.volume = this.volumeMusic;
     this.audioMenu.play();
   }
-  spaceshipSelector() {}
-  stopMusic() {
-    this.audioBackgroundGame.pause();
-    this.audioBoss.pause();
-    this.audioEnemyDie.pause();
-    this.audioGameOver.pause();
-    this.audioMenu.pause();
-  }
   start() {
     this.menu.remove();
     this.scoreId.style.display = "flex";
@@ -107,21 +99,17 @@ class Game {
     //Player movement with arrow keys
     document.addEventListener("keydown", (event) => {
       this.keysDown[event.code] = true;
-      if (event.code === "KeyP" && !this.isPaused) {
-        this.isPaused = true;
+      if (event.code === "KeyP") {
         this.clearIntervals();
         this.displayMenuWindow();
-      } else if (this.isPaused) {
-        this.resumeIntervalsAndTimeouts();
-        this.isPaused = false;
-      }
+      } 
     });
     document.addEventListener("keyup", (event) => {
       this.keysDown[event.code] = false;
-      this.player.playerElm.removeAttribute("class", "move-right");
-      this.player.playerElm.removeAttribute("class", "move-left");
-      this.player.playerElm.removeAttribute("class", "move-up");
-      this.player.playerElm.removeAttribute("class", "move-down");
+      this.player.playerElm.classList.remove("move-right");
+      this.player.playerElm.classList.remove("move-left");
+      this.player.playerElm.classList.remove("move-up");
+      this.player.playerElm.classList.remove("move-down");
     });
   }
   spawnEnemy(movementSpeed, spawnInterval) {
@@ -244,9 +232,19 @@ class Game {
     ) {
       if (this.health.innerHTML <= 1) {
         this.displayGameOver();
-      } else {
-        this.removeEnemy(enemy, indexEnemy);
+        this.playerTakesDamage();
+      } else if(!this.playerDamageDelay){
+        this.playerDamageDelay = true
+        this.player.playerDamaged()
         this.health.innerHTML--;
+        this.playerTakesDamage();
+        enemy.health--;
+        if(enemy.health <=1){
+          this.removeEnemy(enemy, indexEnemy);
+        }
+        setTimeout(() => {
+          this.playerDamageDelay = false
+        }, 4000);
       }
     }
     this.allShots.forEach((shot, index) => {
@@ -364,6 +362,14 @@ class Game {
       clearTimeout(this.timeoutIds[i]);
     }
   }
+  playerTakesDamage(){
+    this.flash = document.createElement("div")
+    this.flash.classList.add("flash")
+    this.boardElm.appendChild(this.flash)
+    setTimeout(()=>{
+      this.boardElm.removeChild(this.flash)
+    },100)
+  }
   displayGameOver() {
     this.audioGameOver.play();
     this.clearIntervals();
@@ -403,8 +409,3 @@ function options() {
 function saveOptions() {
   optionsDisplay.style.display = "none";
 }
-
-const audioButton = document.getElementById("mute-sound");
-audioButton.addEventListener("click", () => {
-  game.stopMusic();
-});

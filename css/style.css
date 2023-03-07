@@ -58,7 +58,6 @@ body {
     background-size: cover;
     background-repeat: no-repeat;
     position: absolute;
-
 }
 
 .enemy {
@@ -94,6 +93,7 @@ body {
     justify-content: flex-start;
     align-items: center;
     position: absolute;
+    text-align: center;
     top: 25vh;
     flex-direction: column;
     background-color: rgb(97, 97, 97);
@@ -110,17 +110,37 @@ body {
     align-items: center;
     font-size: 1vw;
     width: 30vw;
-    height: 25vh;
+    height: 50vh;
     gap: 10px;
 }
 
-#options label,
-#options-id {
+#options label {
     font-size: 1vw;
+    color: #fdfdfe;
+
+}
+
+#options-id {
+    font-size: 2vw;
+    color: #fdfdfe;
+    text-shadow: 0px 0px 5px #b393d3, 0px 0px 10px #b393d3, 0px 0px 10px #b393d3,
+        0px 0px 20px #b393d3;
 }
 
 #options-display {
     font-size: 2vw !important;
+}
+
+#save-options {
+    color: #fdfdfe;
+    text-shadow: 0px 0px 5px black, 0px 0px 10px black, 0px 0px 10px black,
+        0px 0px 20px black;
+}
+
+#save-options:hover {
+    color: #fdfdfe;
+    text-shadow: 0px 0px 5px #b41d1d, 0px 0px 10px #b41d1d, 0px 0px 10px #b41d1d,
+        0px 0px 20px #b41d1d;
 }
 
 #pause-title a {
@@ -264,6 +284,47 @@ body {
     height: 20px;
     background-color: red;
 }
-.volume-bar{
+
+.volume-bar {
     width: 100%;
+}
+
+.flash {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: red;
+    opacity: 0.5;
+    pointer-events: none;
+    animation: flashAnimation 0.5s forwards;
+}
+
+@keyframes flashAnimation {
+    from {
+        opacity: 0.5;
+    }
+
+    to {
+        opacity: 0;
+    }
+}
+
+.player-takes-damage {
+    animation: player-dmg 0.5s ease-in-out infinite;
+}
+
+@keyframes player-dmg {
+    0% {
+        opacity: 0;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+    }
 }

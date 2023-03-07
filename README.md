@@ -33,3 +33,4 @@ Tasks for a better game
 # Fix
 
 - Bug when collision detected, player and enemy don't exactly match
+- Bug when collision with boss destroyed it
