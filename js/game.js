@@ -1,21 +1,34 @@
 class Game {
   constructor(speed) {
     this.player = null;
-    this.allEnemies = []; 
+    this.allEnemies = [];
     this.allShots = [];
-    this.allBonus = []
+    this.allBonus = [];
     this.speedSpawnShot = 700;
-    this.speedMovement = speed
+    this.speedMovement = speed;
+    this.intervalTimes = [];
+    this.timeoutTimes = [];
+    this.intervalIds = [];
+    this.timeoutIds = [];
+    this.isPaused = false
+    this.keysDown = {};
+    this.getElementsDOM()
+    this.audios()
+  }
+  getElementsDOM(){
+    this.score = document.getElementById("score");
+    this.health = document.getElementById("health");
+    this.boardElm = document.getElementById("board");
+    this.scoreId = document.getElementById("id-score");
+    this.healthId = document.getElementById("id-health");
+  }
+  audios(){
     this.audioGameOver = new Audio("./sounds/game-over.wav");
     this.audioBackgroundGame = new Audio("./sounds/background-game.mp3");
     this.audioEnemyDie = new Audio("./sounds/enemy-die.wav");
     this.audioMenu = new Audio("./sounds/background-menu.wav");
-    this.audioBonusUp = new Audio("./sounds/bonus-up.ogg")
-    this.audioBoss = new Audio("./sounds/background-boss.mp3")
-    this.keysDown = {};
-    this.score = document.getElementById("score");
-    this.health = document.getElementById("health");
-    this.boardElm = document.getElementById("board");
+    this.audioBonusUp = new Audio("./sounds/bonus-up.ogg");
+    this.audioBoss = new Audio("./sounds/background-boss.mp3");
   }
   intro() {
     this.menu = document.createElement("div");
@@ -35,29 +48,27 @@ class Game {
     `;
     this.boardElm.prepend(this.menu);
     this.audioMenu.loop = true;
+    this.audioMenu.volume = 0.5;
     this.audioMenu.play();
   }
-  spaceshipSelector() {
-
-  }
-  stopMusic(){
-    this.audioBackgroundGame.pause()
-    this.audioEnemyDie.pause()
-    this.audioGameOver.pause()
-    this.audioMenu.pause()
+  spaceshipSelector() {}
+  stopMusic() {
+    this.audioBackgroundGame.pause();
+    this.audioBoss.pause()
+    this.audioEnemyDie.pause();
+    this.audioGameOver.pause();
+    this.audioMenu.pause();
   }
   start() {
     this.menu.remove();
-    this.scoreId = document.getElementById("id-score")
-    this.scoreId.style.display = "flex"
-    this.healthId = document.getElementById("id-health")
-    this.healthId.style.display = "flex"
-    this.audioMenu.pause()
-    this.audioBackgroundGame.loop = true
+    this.scoreId.style.display = "flex";
+    this.healthId.style.display = "flex";
+    this.audioMenu.pause();
+    this.audioBackgroundGame.loop = true;
     this.audioBackgroundGame.play();
     this.player = new Player();
     this.spawnShot();
-    this.spawnEnemy(0.4,800);
+    this.spawnEnemy(0.4, 800);
     this.spawnBonus();
     this.spawnBoss();
     this.moveEnemy();
@@ -72,28 +83,32 @@ class Game {
       const newEnemy = new Enemy(movementSpeed);
       this.allEnemies.push(newEnemy);
     }, spawnInterval);
+    this.intervalIds.push(this.spawnerEnemy)
   }
-  spawnBoss(){
-    this.spawnerBoss = setTimeout(()=>{
-      clearInterval(this.spawnerEnemy)
-      setTimeout(()=>{
-        this.audioBackgroundGame.pause()
-        this.audioBoss.play()
-        this.audioBoss.volume = 0
-        console.log(this.audioBoss.volume)
-        const incrementVolume = () =>{
-          if (this.audioBoss.volume<1){
-            this.audioBoss.volume += 0.1
-            setTimeout(incrementVolume,1000)
+  spawnBoss() {
+    this.spawnerBoss = setTimeout(() => {
+      clearInterval(this.spawnerEnemy);
+      setTimeout(() => {
+        this.audioBackgroundGame.pause();
+        this.audioBoss.play();
+        this.audioBoss.loop = true;
+        this.audioBoss.volume = 0;
+        const incrementVolume = () => {
+          if (this.audioBoss.volume < 1) {
+            this.audioBoss.volume += 0.1;
+            setTimeout(incrementVolume, 1000);
           }
-        }
-        incrementVolume()
-      },4000)
-      setTimeout(()=>{
-        const newBoss = new Boss(0.2)
-        this.allEnemies.push(newBoss)
-      },10000)
-    },30000)
+        };
+        incrementVolume();
+      }, 4000);
+      this.timeoutBoss = setTimeout(() => {
+        const newBoss = new Boss(0.2);
+        this.allEnemies.push(newBoss);
+      }, 10000);
+      this.intervalIds.push(this.timeoutBoss)
+    }, 30000);
+    this.intervalIds.push(this.spawnerBoss)
+
   }
   spawnShot() {
     //Player shots every XX ms
@@ -109,17 +124,19 @@ class Game {
       this.allShots.push(newShotLeft);
       this.allShots.push(newShotRight);
     }, this.speedSpawnShot);
+    this.intervalIds.push(this.spawnerShot)
   }
-  spawnBonus(){
+  spawnBonus() {
     this.spawnerBonus = setInterval(() => {
-      this.randomBonus = Math.floor(Math.random() * 4) + 1;
-      const newBonus = new Bonus(this.randomBonus)
-      this.allBonus.push(newBonus)
+      this.randomBonus = Math.floor(Math.random() * 2) + 1;
+      const newBonus = new Bonus(this.randomBonus);
+      this.allBonus.push(newBonus);
     }, 7000);
+    this.intervalIds.push(this.spawnerBonus)
   }
   moveShot(speed) {
     //Move the shots
-    setInterval(() => {
+    this.movementShot = setInterval(() => {
       this.allShots.forEach((shot, index) => {
         shot.moveUp(speed);
         if (shot.positionY > 100) {
@@ -127,6 +144,7 @@ class Game {
         }
       });
     }, 16);
+    this.intervalIds.push(this.movementShot)
   }
   moveEnemy() {
     //Move the enemies down every XX ms
@@ -139,6 +157,7 @@ class Game {
         enemy.moveDown();
       });
     }, 32);
+    this.intervalIds.push(this.movementEnemy)
   }
   movePlayer() {
     if (this.keysDown["ArrowRight"]) {
@@ -153,25 +172,35 @@ class Game {
     if (this.keysDown["ArrowDown"]) {
       this.player.moveDown();
     }
-    setTimeout(() => {
+    this.movementPlayer = setTimeout(() => {
       this.movePlayer();
     }, 8);
+    this.intervalIds.push(this.movementPlayer)
   }
-  moveBonus(){
+  moveBonus() {
     this.movementBonus = setInterval(() => {
-      this.allBonus.forEach((bonus,indexBonus) => {
+      this.allBonus.forEach((bonus, indexBonus) => {
         bonus.moveDown();
-        if (bonus.positionY<0){
-          this.removeBonus(bonus,indexBonus)
+        if (bonus.positionY < 0) {
+          this.removeBonus(bonus, indexBonus);
         }
-        this.detectCollisionBonus(bonus,indexBonus)
-      })
+        this.detectCollisionBonus(bonus, indexBonus);
+      });
     }, 32);
+    this.intervalIds.push(this.movementBonus)
   }
   attachEventListeners() {
     //Player movement with arrow keys
     document.addEventListener("keydown", (event) => {
       this.keysDown[event.code] = true;
+      if (event.code === "KeyP" && !this.isPaused) {
+        this.isPaused = true
+        this.clearIntervals();
+        this.displayMenuWindow();
+      } else if(this.isPaused){
+        this.resumeIntervalsAndTimeouts()
+        this.isPaused = false
+      }
     });
     document.addEventListener("keyup", (event) => {
       this.keysDown[event.code] = false;
@@ -188,13 +217,11 @@ class Game {
       enemy.positionY < this.player.positionY + this.player.height &&
       enemy.height + enemy.positionY > this.player.positionY
     ) {
-      console.log(this.health.innerHTML)
-      if(this.health.innerHTML<=1){
+      if (this.health.innerHTML <= 1) {
         this.displayGameOver();
-      }
-      else {
+      } else {
         this.removeEnemy(enemy, indexEnemy);
-        this.health.innerHTML--
+        this.health.innerHTML--;
       }
     }
     this.allShots.forEach((shot, index) => {
@@ -205,42 +232,42 @@ class Game {
         enemy.positionY + enemy.height > shot.positionY
       ) {
         this.removeShot(shot, index);
-        enemy.health--
-        if(enemy.health <= 0) {
+        enemy.health--;
+        if (enemy.health <= 0) {
           this.removeEnemy(enemy, indexEnemy);
           this.audioEnemyDie.play();
           this.score.innerHTML++;
-          enemy.bossHealthBar.remove()
+          enemy.bossHealthBar.remove();
         }
       }
     });
   }
-  detectCollisionBonus(bonus,index){
+  detectCollisionBonus(bonus, index) {
     if (
       bonus.positionX < this.player.positionX + this.player.width &&
       bonus.positionX + bonus.width > this.player.positionX &&
       bonus.positionY < this.player.positionY + this.player.height &&
       bonus.height + bonus.positionY > this.player.positionY
     ) {
-      this.removeBonus(bonus,index)
-      this.audioBonusUp.play()
-      this.selectBonus(this.randomBonus)
+      this.removeBonus(bonus, index);
+      this.audioBonusUp.play();
+      this.selectBonus(this.randomBonus);
     }
   }
   selectBonus(modify) {
     switch (modify) {
       case 1:
         //More atack speed!!!
-        if (this.speedSpawnShot>100) {
-          clearInterval(this.spawnerShot)
+        if (this.speedSpawnShot > 100) {
+          clearInterval(this.spawnerShot);
           this.speedSpawnShot -= 50;
-          this.spawnShot()
+          this.spawnShot();
         }
         break;
-        case 2:
-          //More speed movement
+      case 2:
+        //More speed movement
         if (this.player.speedMovement < 1.5) {
-          this.player.speedMovement+=0.1
+          this.player.speedMovement += 0.1;
         }
         break;
       case 3:
@@ -261,12 +288,56 @@ class Game {
     bonus.bonusSpawn.remove();
     this.allBonus.splice(index, 1);
   }
+  saveIntervalTime(id) {
+    const startTime = Date.now();
+    return function () {
+      const endTime = Date.now();
+      this.intervalTimes[id] -= endTime - startTime;
+    };
+  }
+  saveTimeoutTime(id) {
+    const startTime = Date.now();
+    return function () {
+      const endTime = Date.now();
+      this.timeoutTimes[id] -= endTime - startTime;
+    };
+  }
+  resumeIntervalsAndTimeouts() {
+    for (let i = 0; i < this.intervalIds.length; i++) {
+      setInterval(this.intervalIds[i])      
+    }
+    for (let i = 0; i < this.timeoutIds.length; i++) {
+      setInterval(this.timeoutIds[i])      
+    }
+    // for (let i = 0; i < this.intervalIds.length; i++) {
+    //   const id = this.intervalIds[i];
+    //   const timeRemaining = this.intervalTimes[i];
+
+    //   const intervalFunc = this.saveIntervalTime(i);
+    //   this.intervalIds[i] = setInterval(function () {
+    //     // ...
+    //     intervalFunc(i);
+    //   }, timeRemaining);
+    // }
+
+    // for (let i = 0; i < this.timeoutIds.length; i++) {
+    //   const id = this.timeoutIds[i];
+    //   const timeRemaining = this.timeoutTimes[i];
+
+    //   const timeoutFunc = this.saveTimeoutTime(i);
+    //   this.timeoutIds[i] = setTimeout(function () {
+    //     // ...
+    //     timeoutFunc(i);
+    //   }, timeRemaining);
+    // }
+  }
   clearIntervals() {
-    clearInterval(this.spawnerShot);
-    clearInterval(this.spawnerEnemy);
-    clearInterval(this.movementEnemy);
-    clearInterval(this.movementBonus);
-    clearInterval(this.spawnerBonus);
+    for (let i = 0; i < this.intervalIds.length; i++) {
+      clearInterval(this.intervalIds[i]);
+    }
+    for (let i = 0; i < this.timeoutIds.length; i++) {
+      clearTimeout(this.timeoutIds[i]);
+    }
   }
   displayGameOver() {
     this.audioGameOver.play();
@@ -274,10 +345,33 @@ class Game {
     this.displayEnd = document.createElement("div");
     this.displayEnd.setAttribute("class", "display-window");
     this.displayEnd.innerHTML = `
-    <h1>Game over</h1>
+    <h1 id="game-over-h1">Game over</h1>
     <p>Score : ${this.score.innerHTML}</p>
     <a href="#" onclick="location.reload()">Back to menu</a>
     `;
     this.boardElm.appendChild(this.displayEnd);
   }
+  displayMenuWindow() {
+    this.displayMenu = document.createElement("div");
+    this.displayMenu.setAttribute("class", "display-window");
+    this.displayMenu.setAttribute("id", "pause-title");
+    this.displayMenu.innerHTML = `
+          <h1 id="pause-h1">Pause</h1>
+          <div id="pause">
+              <h1><a >Options</a> </h1>
+              <h1><a >Resume</a> </h1>
+              <h1><a href="">Back to menu</a> </h1>
+          </div>
+          `;
+    this.boardElm.prepend(this.displayMenu);
+  }
 }
+
+function start() {
+  game.start();
+}
+
+const audioButton = document.getElementById("mute-sound");
+audioButton.addEventListener("click", () => {
+  game.stopMusic();
+});
