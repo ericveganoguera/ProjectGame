@@ -17,16 +17,17 @@ Arrow Keys to move the player, it's easy!
 Tasks for MVP (Minimal Value Product)
 
 - Spawn different enemies
-- The player has to have lives
 
 Tasks for a better game
 
-- Add more bonus items
+- Pause game can resume the game and all his intervals/timeouts
+- Complete bonus items
 - Modify the player's div to 2 div for better collision
 - Enemies shoot often
 - Differents spaceships
-- Add bosses
 - Some levels with bosses
+- Add more bosses
+- Pass the wave when boss killed
 - Make smth to slow the time
 
 # Fix

@@ -38,14 +38,16 @@ body {
     overflow: hidden;
     animation: scroll 3s linear infinite;
 }
-#id-score{
-    display:none;
+
+#id-score {
+    display: none;
     position: absolute;
     bottom: 0;
     right: 0;
 }
-#id-health{
-    display:none;
+
+#id-health {
+    display: none;
     position: absolute;
     bottom: 0;
     left: 0;
@@ -64,9 +66,10 @@ body {
     background-size: cover;
     position: absolute;
 }
+
 .boss {
     background-image: url(.././Images/boss1.gif);
-    background-repeat:no-repeat;
+    background-repeat: no-repeat;
     background-position: center;
     background-size: contain;
     position: absolute;
@@ -100,7 +103,8 @@ body {
     border: 3px solid red;
     color: white;
 }
-#options{
+
+#options {
     display: none;
     justify-content: center;
     align-items: center;
@@ -109,31 +113,38 @@ body {
     height: 25vh;
     gap: 10px;
 }
-#options label,#options-id{
+
+#options label,
+#options-id {
     font-size: 1vw;
 }
+
 #options-display {
     font-size: 2vw !important;
 }
-#pause-title a{
+
+#pause-title a {
     font-size: 2vw;
 }
-#pause-title > h1{
+
+#pause-title>h1 {
     font-size: 5vw;
     height: 10%;
 }
-#pause{
+
+#pause {
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
 }
 
-#pause-h1{
+#pause-h1 {
     font-size: 10vh;
     margin-bottom: 10%;
 }
-#game-over-h1{
+
+#game-over-h1 {
     font-size: 10vh;
     margin-bottom: 10%;
 }
@@ -253,13 +264,6 @@ body {
     height: 20px;
     background-color: red;
 }
-
-.volume-control {
-    width: 200px;
-    height: 20px;
-  }
-  
-  #volume-slider {
+.volume-bar{
     width: 100%;
-    height: 100%;
-  }
+}

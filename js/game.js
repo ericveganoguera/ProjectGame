@@ -12,11 +12,11 @@ class Game {
     this.timeoutIds = [];
     this.isPaused = false;
     this.keysDown = {};
-    this.volumeMusic = 1
-    this.volumeEffects = 1
+    this.volumeMusic = 1;
+    this.volumeEffects = 1;
     this.getElementsDOM();
     this.audios();
-    this.reloadVolumeAudios()
+    this.reloadVolumeAudios();
   }
   getElementsDOM() {
     this.score = document.getElementById("score");
@@ -34,29 +34,25 @@ class Game {
     this.audioMenu = new Audio("./sounds/background-menu.wav");
     this.audioBonusUp = new Audio("./sounds/bonus-up.ogg");
     this.audioBoss = new Audio("./sounds/background-boss.mp3");
-
-    
   }
-  volumeAudios(){
-    this.audioGameOver.volume = this.volumeMusic
-    this.audioBackgroundGame.volume = this.volumeMusic
-    this.audioEnemyDie.volume = this.volumeEffects
-    this.audioMenu.volume = this.volumeMusic
-    this.audioBonusUp.volume = this.volumeEffects
-    this.audioBoss.volume = this.volumeMusic
+  volumeAudios() {
+    this.audioGameOver.volume = this.volumeMusic;
+    this.audioBackgroundGame.volume = this.volumeMusic;
+    this.audioEnemyDie.volume = this.volumeEffects;
+    this.audioMenu.volume = this.volumeMusic;
+    this.audioBonusUp.volume = this.volumeEffects;
+    this.audioBoss.volume = this.volumeMusic;
   }
-  reloadVolumeAudios(){
+  reloadVolumeAudios() {
     this.barVolumeMusic.addEventListener("input", () => {
       this.volumeMusic = this.barVolumeMusic.value / 100;
-      console.log(this.volumeMusic)
-      this.volumeAudios()
-
+      console.log(this.volumeMusic);
+      this.volumeAudios();
     });
     this.barVolumeEffect.addEventListener("input", () => {
-      console.log(this.volumeEffects)
+      console.log(this.volumeEffects);
       this.volumeEffects = this.barVolumeEffect.value / 100;
-      this.volumeAudios()
-
+      this.volumeAudios();
     });
   }
   intro() {
@@ -400,12 +396,12 @@ function start() {
   game.start();
 }
 
-const optionsDisplay = document.getElementById("options")
-function options(){
-  optionsDisplay.style.display = "flex"
+const optionsDisplay = document.getElementById("options");
+function options() {
+  optionsDisplay.style.display = "flex";
 }
-function saveOptions(){
-  optionsDisplay.style.display = "none"
+function saveOptions() {
+  optionsDisplay.style.display = "none";
 }
 
 const audioButton = document.getElementById("mute-sound");
