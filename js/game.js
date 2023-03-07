@@ -46,6 +46,8 @@ class Game {
   }
   start() {
     this.menu.remove();
+    this.scoreId = document.getElementById("id-score")
+    this.scoreId.style.display = "flex"
     this.audioBackgroundGame.loop = true
     this.audioBackgroundGame.play();
     this.player = new Player();
@@ -73,7 +75,7 @@ class Game {
         const newBoss = new Boss(0.2)
         this.allEnemies.push(newBoss)
       },10000)
-    },2000)
+    },3000)
   }
   spawnShot() {
     //Player shots every XX ms
@@ -95,7 +97,7 @@ class Game {
       this.randomBonus = Math.floor(Math.random() * 4) + 1;
       const newBonus = new Bonus(this.randomBonus)
       this.allBonus.push(newBonus)
-    }, 2000);
+    }, 7000);
   }
   moveShot(speed) {
     //Move the shots
@@ -183,6 +185,7 @@ class Game {
           this.removeEnemy(enemy, indexEnemy);
           this.audioEnemyDie.play();
           this.score.innerHTML++;
+          enemy.bossHealthBar.remove()
         }
       }
     });

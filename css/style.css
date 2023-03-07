@@ -2,6 +2,7 @@
     0% {
         background-position: bottom;
     }
+
     100% {
         background-position: top;
     }
@@ -15,40 +16,59 @@ body {
     background-image: url(../Images/background.jpg);
     /* background-color: gray; */
     background-size: cover;
-    -webkit-user-select: none; /* Safari */
-    -ms-user-select: none; /* IE 10 and IE 11 */
-    user-select: none; /* Standard syntax */
+    -webkit-user-select: none;
+    /* Safari */
+    -ms-user-select: none;
+    /* IE 10 and IE 11 */
+    user-select: none;
+    /* Standard syntax */
 }
 
 #board {
     /* background-color: lightgray; */
     background-image: url(../assets/background1.png);
     background-size: 100%;
-    box-sizing:border-box;
+    box-sizing: border-box;
     height: 100vh;
     width: 100vh;
     position: relative;
     overflow: hidden;
     animation: scroll 3s linear infinite;
 }
+#id-score{
+    display:none;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+}
+
 #player {
     background-image: url(../Images/spaceship1.png);
-    background-size:cover;
+    background-size: cover;
     background-repeat: no-repeat;
     position: absolute;
 
 }
-.enemy{
-    background-image: url(.././Images/enemy1.png);
+
+.enemy {
+    background-image: url(.././Images/enemy2.png);
     background-size: cover;
     position: absolute;
 }
-.bonus{
+.boss {
+    background-image: url(.././Images/boss1.gif);
+    background-repeat:no-repeat;
+    background-position: center;
+    background-size: contain;
+    position: absolute;
+}
+
+.bonus {
     background-size: cover;
     position: absolute;
 }
 
-.shot{
+.shot {
     /* background-color: red; */
     background-position: center;
     background-image: url(../assets/shot1.png);
@@ -56,8 +76,9 @@ body {
     transform: rotate(-90deg);
     position: absolute;
 }
-.display-window{
-    display:flex;
+
+.display-window {
+    display: flex;
     justify-content: flex-start;
     align-items: center;
     flex-direction: column;
@@ -70,39 +91,47 @@ body {
     position: absolute;
     left: 25vh;
     top: 25vh;
-    color:white;
-    
+    color: white;
+
 }
-.display-window h5{
+
+.display-window h5 {
     font-size: 4em;
 }
-.display-window a{
+
+.display-window a {
     font-size: 4em;
     text-decoration: none;
     color: white;
 }
-#board p{
+
+#board p {
     font-size: 2vw;
     margin: 20px;
     color: white;
 }
-.move-right{
+
+.move-right {
     transform: perspective(800px) rotateY(40deg);
     transition: transform 0.2s;
 }
-.move-left{
+
+.move-left {
     transform: perspective(800px) rotateY(-40deg);
     transition: transform 0.2s;
 }
-.move-up{
+
+.move-up {
     transform: perspective(800px) rotateX(30deg);
     transition: transform 0.2s;
 }
-.move-down{
+
+.move-down {
     transform: perspective(800px) rotateX(-30deg);
     transition: transform 0.2s;
 }
-#intro{
+
+#intro {
     background-image: url(../assets/background-title.jpg);
     background-size: cover;
     display: flex;
@@ -111,34 +140,40 @@ body {
     width: 100%;
     height: 100%;
 }
-#intro h1{
+
+#intro h1 {
     text-align: center;
     font-size: 5vw;
     font-weight: 600;
     color: #fdfdfe;
     text-shadow: 0px 0px 5px #b393d3, 0px 0px 10px #b393d3, 0px 0px 10px #b393d3,
-      0px 0px 20px #b393d3;
+        0px 0px 20px #b393d3;
 }
-#instructions{
+
+#instructions {
     display: flex;
     justify-content: center;
     align-items: center;
     margin-top: 5%;
 }
-#instructions div{
+
+#instructions div {
     box-sizing: content-box;
     margin: 0 40px;
     width: 50%
 }
-#instructions div a:hover{
+
+#instructions div a:hover {
     color: #fdfdfe;
     text-shadow: 0px 0px 5px #b41d1d, 0px 0px 10px #b41d1d, 0px 0px 10px #b41d1d,
-      0px 0px 20px #b41d1d;
+        0px 0px 20px #b41d1d;
 }
-#instructions a:visited{
+
+#instructions a:visited {
     color: #fdfdfe;
 }
-#movement{
+
+#movement {
     display: flex;
     flex-direction: column;
     text-align: center;
@@ -146,22 +181,25 @@ body {
     width: 40%;
     height: auto;
 }
-#movement img{
+
+#movement img {
     max-width: 80%;
 }
-#start-button a{
+
+#start-button a {
     text-decoration: none;
     font-weight: bold;
     color: #fdfdfe;
     font-size: 500%;
     text-shadow: 0px 0px 5px black, 0px 0px 10px black, 0px 0px 10px black,
-      0px 0px 20px black;
+        0px 0px 20px black;
 }
-#start-button{
+
+#start-button {
     width: 40%;
 }
 
-#mute-sound{
+#mute-sound {
     margin: 10px;
     width: 2vw;
     height: 2vw;
@@ -174,3 +212,9 @@ body {
     cursor: pointer;
 }
 
+.health-bar {
+    position: absolute;
+    top: 0;
+    height: 20px;
+    background-color: red;
+}
