@@ -11,8 +11,10 @@ class Game {
     this.audioEnemyDie = new Audio("./sounds/enemy-die.wav");
     this.audioMenu = new Audio("./sounds/background-menu.wav");
     this.audioBonusUp = new Audio("./sounds/bonus-up.ogg")
+    this.audioBoss = new Audio("./sounds/background-boss.mp3")
     this.keysDown = {};
     this.score = document.getElementById("score");
+    this.health = document.getElementById("health");
     this.boardElm = document.getElementById("board");
   }
   intro() {
@@ -48,6 +50,9 @@ class Game {
     this.menu.remove();
     this.scoreId = document.getElementById("id-score")
     this.scoreId.style.display = "flex"
+    this.healthId = document.getElementById("id-health")
+    this.healthId.style.display = "flex"
+    this.audioMenu.pause()
     this.audioBackgroundGame.loop = true
     this.audioBackgroundGame.play();
     this.player = new Player();
@@ -72,10 +77,23 @@ class Game {
     this.spawnerBoss = setTimeout(()=>{
       clearInterval(this.spawnerEnemy)
       setTimeout(()=>{
+        this.audioBackgroundGame.pause()
+        this.audioBoss.play()
+        this.audioBoss.volume = 0
+        console.log(this.audioBoss.volume)
+        const incrementVolume = () =>{
+          if (this.audioBoss.volume<1){
+            this.audioBoss.volume += 0.1
+            setTimeout(incrementVolume,1000)
+          }
+        }
+        incrementVolume()
+      },4000)
+      setTimeout(()=>{
         const newBoss = new Boss(0.2)
         this.allEnemies.push(newBoss)
       },10000)
-    },3000)
+    },30000)
   }
   spawnShot() {
     //Player shots every XX ms
@@ -170,7 +188,14 @@ class Game {
       enemy.positionY < this.player.positionY + this.player.height &&
       enemy.height + enemy.positionY > this.player.positionY
     ) {
-      this.displayGameOver();
+      console.log(this.health.innerHTML)
+      if(this.health.innerHTML<=1){
+        this.displayGameOver();
+      }
+      else {
+        this.removeEnemy(enemy, indexEnemy);
+        this.health.innerHTML--
+      }
     }
     this.allShots.forEach((shot, index) => {
       if (
