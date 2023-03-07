@@ -246,19 +246,6 @@ body {
     width: 40%;
 }
 
-#mute-sound {
-    margin: 10px;
-    width: 2vw;
-    height: 2vw;
-    border: none;
-    position: absolute;
-    right: 0;
-    top: 0;
-    background-image: url("../assets/sound-on.png");
-    background-size: cover;
-    cursor: pointer;
-}
-
 .health-bar {
     position: absolute;
     top: 0;

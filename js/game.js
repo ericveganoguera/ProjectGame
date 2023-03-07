@@ -402,12 +402,10 @@ function start() {
 
 const optionsDisplay = document.getElementById("options")
 function options(){
-    game.displayMenu.remove()
-    optionsDisplay.style.display = "flex"
+  optionsDisplay.style.display = "flex"
 }
 function saveOptions(){
   optionsDisplay.style.display = "none"
-  game.boardElm.appendChild(game.displayMenu)
 }
 
 const audioButton = document.getElementById("mute-sound");
