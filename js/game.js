@@ -10,25 +10,54 @@ class Game {
     this.timeoutTimes = [];
     this.intervalIds = [];
     this.timeoutIds = [];
-    this.isPaused = false
+    this.isPaused = false;
     this.keysDown = {};
-    this.getElementsDOM()
-    this.audios()
+    this.volumeMusic = 1
+    this.volumeEffects = 1
+    this.getElementsDOM();
+    this.audios();
+    this.reloadVolumeAudios()
   }
-  getElementsDOM(){
+  getElementsDOM() {
     this.score = document.getElementById("score");
     this.health = document.getElementById("health");
     this.boardElm = document.getElementById("board");
     this.scoreId = document.getElementById("id-score");
     this.healthId = document.getElementById("id-health");
+    this.barVolumeMusic = document.getElementById("volume-music");
+    this.barVolumeEffect = document.getElementById("volume-effects");
   }
-  audios(){
+  audios() {
     this.audioGameOver = new Audio("./sounds/game-over.wav");
     this.audioBackgroundGame = new Audio("./sounds/background-game.mp3");
     this.audioEnemyDie = new Audio("./sounds/enemy-die.wav");
     this.audioMenu = new Audio("./sounds/background-menu.wav");
     this.audioBonusUp = new Audio("./sounds/bonus-up.ogg");
     this.audioBoss = new Audio("./sounds/background-boss.mp3");
+
+    
+  }
+  volumeAudios(){
+    this.audioGameOver.volume = this.volumeMusic
+    this.audioBackgroundGame.volume = this.volumeMusic
+    this.audioEnemyDie.volume = this.volumeEffects
+    this.audioMenu.volume = this.volumeMusic
+    this.audioBonusUp.volume = this.volumeEffects
+    this.audioBoss.volume = this.volumeMusic
+  }
+  reloadVolumeAudios(){
+    this.barVolumeMusic.addEventListener("input", () => {
+      this.volumeMusic = this.barVolumeMusic.value / 100;
+      console.log(this.volumeMusic)
+      this.volumeAudios()
+
+    });
+    this.barVolumeEffect.addEventListener("input", () => {
+      console.log(this.volumeEffects)
+      this.volumeEffects = this.barVolumeEffect.value / 100;
+      this.volumeAudios()
+
+    });
   }
   intro() {
     this.menu = document.createElement("div");
@@ -43,18 +72,19 @@ class Game {
     </div>
     <div id="start-button">
     <a href="#" onclick="start()"draggable="false">START</a>
+    <a id="options-display" onclick="options()">Options</a>
     </div>
     </div>
     `;
     this.boardElm.prepend(this.menu);
     this.audioMenu.loop = true;
-    this.audioMenu.volume = 0.5;
+    this.audioMenu.volume = this.volumeMusic;
     this.audioMenu.play();
   }
   spaceshipSelector() {}
   stopMusic() {
     this.audioBackgroundGame.pause();
-    this.audioBoss.pause()
+    this.audioBoss.pause();
     this.audioEnemyDie.pause();
     this.audioGameOver.pause();
     this.audioMenu.pause();
@@ -77,13 +107,34 @@ class Game {
     this.attachEventListeners();
     this.movePlayer();
   }
+  attachEventListeners() {
+    //Player movement with arrow keys
+    document.addEventListener("keydown", (event) => {
+      this.keysDown[event.code] = true;
+      if (event.code === "KeyP" && !this.isPaused) {
+        this.isPaused = true;
+        this.clearIntervals();
+        this.displayMenuWindow();
+      } else if (this.isPaused) {
+        this.resumeIntervalsAndTimeouts();
+        this.isPaused = false;
+      }
+    });
+    document.addEventListener("keyup", (event) => {
+      this.keysDown[event.code] = false;
+      this.player.playerElm.removeAttribute("class", "move-right");
+      this.player.playerElm.removeAttribute("class", "move-left");
+      this.player.playerElm.removeAttribute("class", "move-up");
+      this.player.playerElm.removeAttribute("class", "move-down");
+    });
+  }
   spawnEnemy(movementSpeed, spawnInterval) {
     //Spawn enemies every spawnInterval with movementSpeed
     this.spawnerEnemy = setInterval(() => {
       const newEnemy = new Enemy(movementSpeed);
       this.allEnemies.push(newEnemy);
     }, spawnInterval);
-    this.intervalIds.push(this.spawnerEnemy)
+    this.intervalIds.push(this.spawnerEnemy);
   }
   spawnBoss() {
     this.spawnerBoss = setTimeout(() => {
@@ -94,7 +145,7 @@ class Game {
         this.audioBoss.loop = true;
         this.audioBoss.volume = 0;
         const incrementVolume = () => {
-          if (this.audioBoss.volume < 1) {
+          if (this.audioBoss.volume < this.volumeMusic) {
             this.audioBoss.volume += 0.1;
             setTimeout(incrementVolume, 1000);
           }
@@ -105,10 +156,9 @@ class Game {
         const newBoss = new Boss(0.2);
         this.allEnemies.push(newBoss);
       }, 10000);
-      this.intervalIds.push(this.timeoutBoss)
+      this.intervalIds.push(this.timeoutBoss);
     }, 30000);
-    this.intervalIds.push(this.spawnerBoss)
-
+    this.intervalIds.push(this.spawnerBoss);
   }
   spawnShot() {
     //Player shots every XX ms
@@ -124,7 +174,7 @@ class Game {
       this.allShots.push(newShotLeft);
       this.allShots.push(newShotRight);
     }, this.speedSpawnShot);
-    this.intervalIds.push(this.spawnerShot)
+    this.intervalIds.push(this.spawnerShot);
   }
   spawnBonus() {
     this.spawnerBonus = setInterval(() => {
@@ -132,7 +182,7 @@ class Game {
       const newBonus = new Bonus(this.randomBonus);
       this.allBonus.push(newBonus);
     }, 7000);
-    this.intervalIds.push(this.spawnerBonus)
+    this.intervalIds.push(this.spawnerBonus);
   }
   moveShot(speed) {
     //Move the shots
@@ -144,7 +194,7 @@ class Game {
         }
       });
     }, 16);
-    this.intervalIds.push(this.movementShot)
+    this.intervalIds.push(this.movementShot);
   }
   moveEnemy() {
     //Move the enemies down every XX ms
@@ -157,7 +207,7 @@ class Game {
         enemy.moveDown();
       });
     }, 32);
-    this.intervalIds.push(this.movementEnemy)
+    this.intervalIds.push(this.movementEnemy);
   }
   movePlayer() {
     if (this.keysDown["ArrowRight"]) {
@@ -175,7 +225,7 @@ class Game {
     this.movementPlayer = setTimeout(() => {
       this.movePlayer();
     }, 8);
-    this.intervalIds.push(this.movementPlayer)
+    this.intervalIds.push(this.movementPlayer);
   }
   moveBonus() {
     this.movementBonus = setInterval(() => {
@@ -187,28 +237,7 @@ class Game {
         this.detectCollisionBonus(bonus, indexBonus);
       });
     }, 32);
-    this.intervalIds.push(this.movementBonus)
-  }
-  attachEventListeners() {
-    //Player movement with arrow keys
-    document.addEventListener("keydown", (event) => {
-      this.keysDown[event.code] = true;
-      if (event.code === "KeyP" && !this.isPaused) {
-        this.isPaused = true
-        this.clearIntervals();
-        this.displayMenuWindow();
-      } else if(this.isPaused){
-        this.resumeIntervalsAndTimeouts()
-        this.isPaused = false
-      }
-    });
-    document.addEventListener("keyup", (event) => {
-      this.keysDown[event.code] = false;
-      this.player.playerElm.removeAttribute("class", "move-right");
-      this.player.playerElm.removeAttribute("class", "move-left");
-      this.player.playerElm.removeAttribute("class", "move-up");
-      this.player.playerElm.removeAttribute("class", "move-down");
-    });
+    this.intervalIds.push(this.movementBonus);
   }
   detectCollision(enemy, indexEnemy) {
     if (
@@ -304,10 +333,10 @@ class Game {
   }
   resumeIntervalsAndTimeouts() {
     for (let i = 0; i < this.intervalIds.length; i++) {
-      setInterval(this.intervalIds[i])      
+      setInterval(this.intervalIds[i]);
     }
     for (let i = 0; i < this.timeoutIds.length; i++) {
-      setInterval(this.timeoutIds[i])      
+      setInterval(this.timeoutIds[i]);
     }
     // for (let i = 0; i < this.intervalIds.length; i++) {
     //   const id = this.intervalIds[i];
@@ -358,7 +387,7 @@ class Game {
     this.displayMenu.innerHTML = `
           <h1 id="pause-h1">Pause</h1>
           <div id="pause">
-              <h1><a >Options</a> </h1>
+              <h1><a onclick="options()">Options</a> </h1>
               <h1><a >Resume</a> </h1>
               <h1><a href="">Back to menu</a> </h1>
           </div>
@@ -369,6 +398,16 @@ class Game {
 
 function start() {
   game.start();
+}
+
+const optionsDisplay = document.getElementById("options")
+function options(){
+    game.displayMenu.remove()
+    optionsDisplay.style.display = "flex"
+}
+function saveOptions(){
+  optionsDisplay.style.display = "none"
+  game.boardElm.appendChild(game.displayMenu)
 }
 
 const audioButton = document.getElementById("mute-sound");

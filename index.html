@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <link rel="stylesheet" href="./css/style.css">
     <title>ProjectGame</title>
 </head>
+
 <body id="body">
     <div id="board">
         <div id="mute-sound"></div>
@@ -22,6 +24,20 @@
               <h1><a href="">Back to menu</a> </h1>
           </div>
     </div> -->
+    <div id="options" class="display-window">
+        <div id="options-id">OPTIONS</div>
+        <div class="volume-control">
+            <label >Music: </label>
+            <input type="range" min="0" max="100" value="50" id="volume-music">
+        </div>
+        <div class="volume-control">
+            <label >Effects: </label>
+            <input type="range" min="0" max="100" value="50" id="volume-effects">
+        </div>
+        <div>
+            <a id="save-options" onclick="saveOptions()">Save</a>
+        </div>
+    </div>
     <script src="./js/enemy.js"></script>
     <script src="./js/player.js"></script>
     <script src="./js/shot.js"></script>
@@ -29,4 +45,5 @@
     <script src="./js/game.js"></script>
     <script src="./js/bonus.js"></script>
 </body>
-</html> 
+
+</html>
