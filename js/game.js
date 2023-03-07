@@ -178,9 +178,12 @@ class Game {
         enemy.positionY + enemy.height > shot.positionY
       ) {
         this.removeShot(shot, index);
-        this.removeEnemy(enemy, indexEnemy);
-        this.audioEnemyDie.play();
-        this.score.innerHTML++;
+        enemy.health--
+        if(enemy.health <= 0) {
+          this.removeEnemy(enemy, indexEnemy);
+          this.audioEnemyDie.play();
+          this.score.innerHTML++;
+        }
       }
     });
   }
@@ -200,7 +203,7 @@ class Game {
     switch (modify) {
       case 1:
         //More atack speed!!!
-        if (this.speedSpawnShot>300) {
+        if (this.speedSpawnShot>100) {
           clearInterval(this.spawnerShot)
           this.speedSpawnShot -= 50;
           this.spawnShot()
