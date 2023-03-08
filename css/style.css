@@ -84,6 +84,12 @@ body {
 .bonus-attack-speed{
     background-image: url(../assets/attack-speed-bonus.png);
 }
+.bonus-more-bullets{
+    background-image: url(../assets/more-bullets-bonus.png);
+}
+.bonus-health{
+    background-image: url(../assets/health-bonus.png);
+}
 .meteor{
     background-image: url(../assets/meteor.png);
     background-size: cover;
@@ -93,7 +99,7 @@ body {
 .shot {
     /* background-color: red; */
     background-position: center;
-    background-image: url(../assets/shot1.png);
+    background-image: url(../assets/shot2.png);
     background-size: cover;
     transform: rotate(-90deg);
     position: absolute;

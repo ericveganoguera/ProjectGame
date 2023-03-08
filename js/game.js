@@ -1,14 +1,12 @@
 class Game {
   constructor(speed) {
-    this.player = null;
     this.allEnemies = [];
     this.allMeteor = [];
     this.allShots = [];
     this.allBonus = [];
     this.speedSpawnShot = 700;
     this.speedMovement = speed;
-    this.intervalTimes = [];
-    this.timeoutTimes = [];
+    this.amountShot = 1;
     this.intervalIds = [];
     this.timeoutIds = [];
     this.playerDamageDelay = false;
@@ -86,7 +84,8 @@ class Game {
     this.audioBackgroundGame.loop = true;
     this.audioBackgroundGame.play();
     this.player = new Player();
-    this.spawnShot();
+    this.spawnShot(2, 3);
+    this.spawnShot(6, 3);
     this.spawnEnemy(0.4, 800);
     this.spawnMeteor();
     this.spawnBonus();
@@ -164,25 +163,20 @@ class Game {
     }, 1000);
     this.intervalIds.push(this.spawnerMeteor);
   }
-  spawnShot() {
+  spawnShot(positionX, positionY) {
     //Player shots every XX ms
     this.spawnerShot = setInterval(() => {
       const newShotLeft = new Shot(
-        this.player.positionX + 2,
-        this.player.positionY + 3
-      );
-      const newShotRight = new Shot(
-        this.player.positionX + 6,
-        this.player.positionY + 3
+        this.player.positionX + positionX,
+        this.player.positionY + positionY
       );
       this.allShots.push(newShotLeft);
-      this.allShots.push(newShotRight);
     }, this.speedSpawnShot);
     this.intervalIds.push(this.spawnerShot);
   }
   spawnBonus() {
     this.spawnerBonus = setInterval(() => {
-      this.randomBonus = Math.floor(Math.random() * 2) + 1;
+      this.randomBonus = Math.floor(Math.random() * 4) + 1;
       const newBonus = new Bonus(this.randomBonus);
       this.allBonus.push(newBonus);
     }, 7000);
@@ -231,6 +225,7 @@ class Game {
         }
       }, 32);
     });
+    this.intervalIds.push(this.movementMeteor);
   }
   moveBonus() {
     this.movementBonus = setInterval(() => {
@@ -310,12 +305,13 @@ class Game {
           }
           if (enemy instanceof Enemy) {
             this.removeEnemy(enemy, indexEnemy);
-            this.score.innerHTML=Number(this.score.innerHTML)+2;
+            this.score.innerHTML = Number(this.score.innerHTML) + 2;
           }
           this.audioEnemyDie.play();
           if (enemy instanceof Boss) {
             enemy.bossHealthBar.remove();
-            this.score.innerHTML=Number(this.score.innerHTML)+100;
+            this.removeEnemy(enemy, indexEnemy);
+            this.score.innerHTML = Number(this.score.innerHTML) + 100;
           }
         }
       }
@@ -326,9 +322,7 @@ class Game {
       case 1:
         //More atack speed!!!
         if (this.speedSpawnShot > 100) {
-          clearInterval(this.spawnerShot);
           this.speedSpawnShot -= 50;
-          this.spawnShot();
         }
         break;
       case 2:
@@ -338,8 +332,24 @@ class Game {
         }
         break;
       case 3:
+        //Bonus more bullets
+        if (this.amountShot === 1) {
+          console.log("1");
+          this.spawnShot(4, 10);
+          this.amountShot++;
+        } else if (this.amountShot === 2) {
+          console.log("2");
+          this.amountShot++;
+          this.spawnShot(0, 3);
+        } else if (this.amountShot === 3) {
+          console.log("3");
+          this.spawnShot(10, 3);
+          this.amountShot++;
+        }
         break;
       case 4:
+        //Bonus to health the player!
+        if (this.health.innerHTML < 3) this.health.innerHTML++
         break;
     }
   }
@@ -432,7 +442,7 @@ class Game {
   }
   displayMenuWindow() {
     this.displayMenu = document.createElement("div");
-    this.displayMenu.setAttribute("class", "display-window");
+    this.displayMenu.classList.add("display-window");
     this.displayMenu.setAttribute("id", "pause-title");
     this.displayMenu.innerHTML = `
           <h1 id="pause-h1">Pause</h1>
@@ -442,7 +452,7 @@ class Game {
               <h1><a href="">Back to menu</a> </h1>
           </div>
           `;
-    this.boardElm.prepend(this.displayMenu);
+    this.boardElm.append(this.displayMenu);
   }
 }
 
