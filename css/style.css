@@ -78,6 +78,12 @@ body {
     background-size: cover;
     position: absolute;
 }
+.bonus-speed-movement{
+    background-image: url('../assets/movement-speed-bonus.png');
+}
+.bonus-attack-speed{
+    background-image: url('../assets/attack-speed-bonus.png');
+}
 
 .shot {
     /* background-color: red; */

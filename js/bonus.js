@@ -18,12 +18,10 @@ class Bonus {
     this.bonusSpawn.style.height = this.height + "vh";
     switch (this.modify) {
       case 1:
-        this.bonusSpawn.style.backgroundImage =
-          "url('../assets/attack-speed-bonus.png')";
+        this.bonusSpawn.classList.add("bonus-attack-speed")
         break;
       case 2:
-        this.bonusSpawn.style.backgroundImage =
-        "url('../assets/movement-speed-bonus.png')";
+        this.bonusSpawn.classList.add("bonus-speed-movement")
         break;
       case 3:
         break;
