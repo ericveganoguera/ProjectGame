@@ -41,7 +41,6 @@ class Player {
     }
   }
   playerDamaged() {
-    console.log("IN")
     this.playerElm.classList.add("player-takes-damage")
     setTimeout(() => {
       this.playerElm.classList.remove("player-takes-damage")

@@ -2,7 +2,7 @@ class Game {
   constructor(speed) {
     this.player = null;
     this.allEnemies = [];
-    this.allMeteor = []
+    this.allMeteor = [];
     this.allShots = [];
     this.allBonus = [];
     this.speedSpawnShot = 700;
@@ -11,7 +11,7 @@ class Game {
     this.timeoutTimes = [];
     this.intervalIds = [];
     this.timeoutIds = [];
-    this.playerDamageDelay = false
+    this.playerDamageDelay = false;
     this.keysDown = {};
     this.volumeMusic = 0.5;
     this.volumeEffects = 0.5;
@@ -92,7 +92,7 @@ class Game {
     this.spawnBonus();
     this.spawnBoss();
     this.moveEnemy();
-    this.moveMeteor()
+    this.moveMeteor();
     this.moveShot(0.8);
     this.moveBonus();
     this.attachEventListeners();
@@ -105,7 +105,7 @@ class Game {
       if (event.code === "KeyP") {
         this.clearIntervals();
         this.displayMenuWindow();
-      } 
+      }
     });
     document.addEventListener("keyup", (event) => {
       this.keysDown[event.code] = false;
@@ -119,14 +119,14 @@ class Game {
     //Spawn enemies every spawnInterval with movementSpeed after 15 seconds
     this.firstSpawnEnemy = setTimeout(() => {
       //Stop meteor spawn
-      clearInterval(this.spawnerMeteor)
+      clearInterval(this.spawnerMeteor);
       this.spawnerEnemy = setInterval(() => {
         const newEnemy = new Enemy(movementSpeed);
         this.allEnemies.push(newEnemy);
       }, spawnInterval);
       this.intervalIds.push(this.spawnerEnemy);
     }, 15000);
-    this.timeoutIds.push(this.firstSpawnEnemy)
+    this.timeoutIds.push(this.firstSpawnEnemy);
   }
   spawnBoss() {
     //Spawn boss with timeout 60 seconds
@@ -157,12 +157,12 @@ class Game {
     }, 60000);
     this.intervalIds.push(this.spawnerBoss);
   }
-  spawnMeteor(){
-    this.spawnerMeteor = setInterval(()=>{
+  spawnMeteor() {
+    this.spawnerMeteor = setInterval(() => {
       const newMeteor = new Meteor();
-      this.allMeteor.push(newMeteor)
-    },1000)
-    this.intervalIds.push(this.spawnMeteor)
+      this.allMeteor.push(newMeteor);
+    }, 1000);
+    this.intervalIds.push(this.spawnerMeteor);
   }
   spawnShot() {
     //Player shots every XX ms
@@ -213,25 +213,24 @@ class Game {
     }, 32);
     this.intervalIds.push(this.movementEnemy);
   }
-  moveMeteor(){
-    this.movementMeteor = setInterval(()=>{
-      this.allMeteor.forEach((meteor,indexMeteor) => {
-        this.changeDirection = 1
+  moveMeteor() {
+    this.movementMeteor = setInterval(() => {
+      this.allMeteor.forEach((meteor, indexMeteor) => {
+        this.changeDirection = 1;
         if (meteor.positionY < 0) {
-          this.removeMeteor(meteor,indexMeteor)
+          this.removeMeteor(meteor, indexMeteor);
         }
-        this.detectCollision(meteor,indexMeteor)
-        meteor.moveDown()
+        this.detectCollision(meteor, indexMeteor);
+        meteor.moveDown();
         if (this.changeDirection === 1) {
-          meteor.moveRight()
-          this.changeDirection++
-        }
-        else if(this.changeDirection === 2){
+          meteor.moveRight();
+          this.changeDirection++;
+        } else if (this.changeDirection === 2) {
           meteor.moveLeft();
-          this.changeDirection--
+          this.changeDirection--;
         }
-      },32)
-    })
+      }, 32);
+    });
   }
   moveBonus() {
     this.movementBonus = setInterval(() => {
@@ -240,7 +239,7 @@ class Game {
         if (bonus.positionY < 0) {
           this.removeBonus(bonus, indexBonus);
         }
-        this.detectCollisionBonus(bonus, indexBonus);
+        this.detectCollision(bonus, indexBonus);
       });
     }, 32);
     this.intervalIds.push(this.movementBonus);
@@ -263,7 +262,6 @@ class Game {
     }, 8);
     this.intervalIds.push(this.movementPlayer);
   }
-
   detectCollision(enemy, indexEnemy) {
     if (
       enemy.positionX < this.player.positionX + this.player.width &&
@@ -271,21 +269,29 @@ class Game {
       enemy.positionY < this.player.positionY + this.player.height &&
       enemy.height + enemy.positionY > this.player.positionY
     ) {
-      if (this.health.innerHTML <= 1) {
-        this.displayGameOver();
-        this.playerTakesDamage();
-      } else if(!this.playerDamageDelay){
-        this.playerDamageDelay = true
-        this.player.playerDamaged()
-        this.health.innerHTML--;
-        this.playerTakesDamage();
-        enemy.health--;
-        if(enemy.health <=1){
-          this.removeEnemy(enemy, indexEnemy);
+      if (enemy instanceof Bonus) {
+        this.removeBonus(enemy, indexEnemy);
+        this.audioBonusUp.play();
+        this.selectBonus(this.randomBonus);
+      } else {
+        if (this.health.innerHTML <= 1) {
+          this.displayGameOver();
+          this.playerTakesDamage();
+        } else if (!this.playerDamageDelay) {
+          this.playerDamageDelay = true;
+          this.player.playerDamaged();
+          this.health.innerHTML--;
+          this.playerTakesDamage();
+          enemy.health--;
+          if (enemy.health < 1) {
+            if (enemy instanceof Enemy) this.removeEnemy(enemy, indexEnemy);
+            if (enemy instanceof Meteor) this.removeMeteor(enemy, indexEnemy);
+          }
+          this.playerDelay = setTimeout(() => {
+            this.playerDamageDelay = false;
+          }, 4000);
+          this.timeoutIds.push(this.playerDelay);
         }
-        setTimeout(() => {
-          this.playerDamageDelay = false
-        }, 4000);
       }
     }
     this.allShots.forEach((shot, index) => {
@@ -297,26 +303,23 @@ class Game {
       ) {
         this.removeShot(shot, index);
         enemy.health--;
-        if (enemy.health <= 0) {
-          this.removeEnemy(enemy, indexEnemy);
+        if (enemy.health <= 1) {
+          if (enemy instanceof Meteor) {
+            this.removeMeteor(enemy, indexEnemy);
+            this.score.innerHTML++;
+          }
+          if (enemy instanceof Enemy) {
+            this.removeEnemy(enemy, indexEnemy);
+            this.score.innerHTML=Number(this.score.innerHTML)+2;
+          }
           this.audioEnemyDie.play();
-          this.score.innerHTML++;
-          enemy.bossHealthBar.remove();
+          if (enemy instanceof Boss) {
+            enemy.bossHealthBar.remove();
+            this.score.innerHTML=Number(this.score.innerHTML)+100;
+          }
         }
       }
     });
-  }
-  detectCollisionBonus(bonus, index) {
-    if (
-      bonus.positionX < this.player.positionX + this.player.width &&
-      bonus.positionX + bonus.width > this.player.positionX &&
-      bonus.positionY < this.player.positionY + this.player.height &&
-      bonus.height + bonus.positionY > this.player.positionY
-    ) {
-      this.removeBonus(bonus, index);
-      this.audioBonusUp.play();
-      this.selectBonus(this.randomBonus);
-    }
   }
   selectBonus(modify) {
     switch (modify) {
@@ -407,13 +410,13 @@ class Game {
       clearTimeout(this.timeoutIds[i]);
     }
   }
-  playerTakesDamage(){
-    this.flash = document.createElement("div")
-    this.flash.classList.add("flash")
-    this.boardElm.appendChild(this.flash)
-    setTimeout(()=>{
-      this.boardElm.removeChild(this.flash)
-    },100)
+  playerTakesDamage() {
+    this.flash = document.createElement("div");
+    this.flash.classList.add("flash");
+    this.boardElm.appendChild(this.flash);
+    setTimeout(() => {
+      this.boardElm.removeChild(this.flash);
+    }, 100);
   }
   displayGameOver() {
     this.audioGameOver.play();
