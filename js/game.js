@@ -2,6 +2,7 @@ class Game {
   constructor(speed) {
     this.player = null;
     this.allEnemies = [];
+    this.allMeteor = []
     this.allShots = [];
     this.allBonus = [];
     this.speedSpawnShot = 700;
@@ -87,9 +88,11 @@ class Game {
     this.player = new Player();
     this.spawnShot();
     this.spawnEnemy(0.4, 800);
+    this.spawnMeteor();
     this.spawnBonus();
     this.spawnBoss();
     this.moveEnemy();
+    this.moveMeteor()
     this.moveShot(0.8);
     this.moveBonus();
     this.attachEventListeners();
@@ -113,21 +116,30 @@ class Game {
     });
   }
   spawnEnemy(movementSpeed, spawnInterval) {
-    //Spawn enemies every spawnInterval with movementSpeed
-    this.spawnerEnemy = setInterval(() => {
-      const newEnemy = new Enemy(movementSpeed);
-      this.allEnemies.push(newEnemy);
-    }, spawnInterval);
-    this.intervalIds.push(this.spawnerEnemy);
+    //Spawn enemies every spawnInterval with movementSpeed after 15 seconds
+    this.firstSpawnEnemy = setTimeout(() => {
+      //Stop meteor spawn
+      clearInterval(this.spawnerMeteor)
+      this.spawnerEnemy = setInterval(() => {
+        const newEnemy = new Enemy(movementSpeed);
+        this.allEnemies.push(newEnemy);
+      }, spawnInterval);
+      this.intervalIds.push(this.spawnerEnemy);
+    }, 15000);
+    this.timeoutIds.push(this.firstSpawnEnemy)
   }
   spawnBoss() {
+    //Spawn boss with timeout 60 seconds
     this.spawnerBoss = setTimeout(() => {
+      //Stop enemy spawn
       clearInterval(this.spawnerEnemy);
       setTimeout(() => {
+        //Stop background music and play boss music
         this.audioBackgroundGame.pause();
         this.audioBoss.play();
         this.audioBoss.loop = true;
         this.audioBoss.volume = 0;
+        //Increment volume every 1s to be more epic!
         const incrementVolume = () => {
           if (this.audioBoss.volume < this.volumeMusic) {
             this.audioBoss.volume += 0.1;
@@ -136,13 +148,21 @@ class Game {
         };
         incrementVolume();
       }, 4000);
+      //Spawn boss with a delay of 10s!
       this.timeoutBoss = setTimeout(() => {
         const newBoss = new Boss(0.2);
         this.allEnemies.push(newBoss);
       }, 10000);
       this.intervalIds.push(this.timeoutBoss);
-    }, 30000);
+    }, 60000);
     this.intervalIds.push(this.spawnerBoss);
+  }
+  spawnMeteor(){
+    this.spawnerMeteor = setInterval(()=>{
+      const newMeteor = new Meteor();
+      this.allMeteor.push(newMeteor)
+    },1000)
+    this.intervalIds.push(this.spawnMeteor)
   }
   spawnShot() {
     //Player shots every XX ms
@@ -193,6 +213,38 @@ class Game {
     }, 32);
     this.intervalIds.push(this.movementEnemy);
   }
+  moveMeteor(){
+    this.movementMeteor = setInterval(()=>{
+      this.allMeteor.forEach((meteor,indexMeteor) => {
+        this.changeDirection = 1
+        if (meteor.positionY < 0) {
+          this.removeMeteor(meteor,indexMeteor)
+        }
+        this.detectCollision(meteor,indexMeteor)
+        meteor.moveDown()
+        if (this.changeDirection === 1) {
+          meteor.moveRight()
+          this.changeDirection++
+        }
+        else if(this.changeDirection === 2){
+          meteor.moveLeft();
+          this.changeDirection--
+        }
+      },32)
+    })
+  }
+  moveBonus() {
+    this.movementBonus = setInterval(() => {
+      this.allBonus.forEach((bonus, indexBonus) => {
+        bonus.moveDown();
+        if (bonus.positionY < 0) {
+          this.removeBonus(bonus, indexBonus);
+        }
+        this.detectCollisionBonus(bonus, indexBonus);
+      });
+    }, 32);
+    this.intervalIds.push(this.movementBonus);
+  }
   movePlayer() {
     if (this.keysDown["ArrowRight"]) {
       this.player.moveRight();
@@ -211,18 +263,7 @@ class Game {
     }, 8);
     this.intervalIds.push(this.movementPlayer);
   }
-  moveBonus() {
-    this.movementBonus = setInterval(() => {
-      this.allBonus.forEach((bonus, indexBonus) => {
-        bonus.moveDown();
-        if (bonus.positionY < 0) {
-          this.removeBonus(bonus, indexBonus);
-        }
-        this.detectCollisionBonus(bonus, indexBonus);
-      });
-    }, 32);
-    this.intervalIds.push(this.movementBonus);
-  }
+
   detectCollision(enemy, indexEnemy) {
     if (
       enemy.positionX < this.player.positionX + this.player.width &&
@@ -302,6 +343,10 @@ class Game {
   removeEnemy(enemy, index) {
     enemy.enemySpawn.remove();
     this.allEnemies.splice(index, 1);
+  }
+  removeMeteor(meteor, index) {
+    meteor.meteorSpawn.remove();
+    this.allMeteor.splice(index, 1);
   }
   removeShot(shot, index) {
     shot.shotSpawn.remove();

@@ -79,10 +79,15 @@ body {
     position: absolute;
 }
 .bonus-speed-movement{
-    background-image: url('../assets/movement-speed-bonus.png');
+    background-image: url(../assets/movement-speed-bonus.png);
 }
 .bonus-attack-speed{
-    background-image: url('../assets/attack-speed-bonus.png');
+    background-image: url(../assets/attack-speed-bonus.png);
+}
+.meteor{
+    background-image: url(../assets/meteor.png);
+    background-size: cover;
+    position: absolute;
 }
 
 .shot {
