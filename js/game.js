@@ -64,6 +64,9 @@ class Game {
     });
   }
   intro() {
+    this.audioMenu.loop = true;
+    this.audioMenu.volume = this.volumeMusic;
+    this.audioMenu.play();
     this.menu = document.createElement("div");
     this.menu.setAttribute("id", "intro");
     this.menu.innerHTML = `
@@ -81,9 +84,7 @@ class Game {
     </div>
     `;
     this.boardElm.prepend(this.menu);
-    this.audioMenu.loop = true;
-    this.audioMenu.volume = this.volumeMusic;
-    this.audioMenu.play();
+    
   }
   start() {
     this.menu.remove();
