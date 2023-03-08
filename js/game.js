@@ -13,6 +13,7 @@ class Game {
       [8, 3],
     ];
     this.speedSpawnShot = 700;
+    this.imageShot = 0
     this.speedMovement = speed;
     this.randomBonus;
     this.amountShot = 1;
@@ -74,33 +75,35 @@ class Game {
       <h1>SPACESHIP SELECTOR</h1>
       <div id="selector">
           <div class="spaceship">
-              <div><img src="./Images/spaceship1.png" width="100%"></div>
+              <div><img src="./Images/spaceship1.png" width="100%"draggable="false"></div>
               <div class="text-spaceship">Spaceship 1</div>
           </div>
           <div class="spaceship">
-              <div><img src="./Images/spaceship2.png" width="100%"></div>
+              <div><img src="./Images/spaceship2.png" width="100%"draggable="false"></div>
               <div class="text-spaceship">Spaceship 2</div>
           </div>
           <div class="spaceship">
-              <div><img src="./Images/spaceship3.png" width="100%"></div>
+              <div><img src="./Images/spaceship3.png" width="100%"draggable="false"></div>
               <div class="text-spaceship">Spaceship 3</div>
           </div>
           <div class="spaceship">
-              <div><img src="./Images/spaceship4.png" width="100%"></div>
-              <div class="text-spaceship">Spaceship 3</div>
+              <div><img src="./Images/spaceship4.png" width="100%"draggable="false"></div>
+              <div class="text-spaceship">Spaceship 4</div>
           </div>
           </div>
-          <div id="start-button">
+          <div id="spaceship-start-button">
           <a href="#" onclick="start()"draggable="false">START</a></div>
       `;
     this.boardElm.prepend(this.selectSpaceship);
     this.spaceshipSelected = [...document.getElementsByClassName("spaceship")];
-    this.spaceshipSelected.forEach((element) => {
+    this.spaceshipSelected.forEach((element, index) => {
       element.addEventListener("click", () => {
         this.spaceshipSelected.forEach((element2) => {
-          element2.classList.remove("clicked")
-        })
+          element2.classList.remove("clicked");
+          element2.removeAttribute("id");
+        });
         element.classList.add("clicked");
+        element.setAttribute("id", "spaceship-final");
       });
     });
   }
@@ -127,6 +130,23 @@ class Game {
     this.boardElm.prepend(this.menu);
   }
   start() {
+    this.spaceshipFinal = document.getElementById("spaceship-final");
+    this.textSpaceship = [
+      ...this.spaceshipFinal.getElementsByClassName("text-spaceship"),
+    ];
+    if (this.textSpaceship[0].innerHTML.includes("1")) {
+      this.player = new Player(1);
+      this.imageShot = 1
+    } else if (this.textSpaceship[0].innerHTML.includes("2")) {
+      this.player = new Player(2);
+      this.imageShot = 2
+    } else if (this.textSpaceship[0].innerHTML.includes("3")) {
+      this.player = new Player(3);
+      this.imageShot = 3
+    } else if (this.textSpaceship[0].innerHTML.includes("4")) {
+      this.player = new Player(4);
+      this.imageShot = 4
+    } 
     this.selectSpaceship.remove();
     this.scoreId.style.display = "flex";
     this.healthId.style.display = "flex";
@@ -134,9 +154,8 @@ class Game {
     this.audioBackgroundGame.loop = true;
     this.firstWave = true;
     this.audioBackgroundGame.play();
-    this.player = new Player();
-    this.spawnShot(this.positionCanon[0][0], this.positionCanon[0][1]);
-    this.spawnShot(this.positionCanon[1][0], this.positionCanon[1][1]);
+    this.spawnShot(this.positionCanon[0][0], this.positionCanon[0][1],this.imageShot);
+    this.spawnShot(this.positionCanon[1][0], this.positionCanon[1][1],this.imageShot);
     this.spawnEnemy(0.4, 1200, 1, 15000);
     this.spawnMeteor();
     this.spawnBonus();
@@ -235,12 +254,13 @@ class Game {
     }, 1000);
     this.intervalIds.push(this.spawnerMeteor);
   }
-  spawnShot(positionX, positionY) {
+  spawnShot(positionX, positionY,image) {
     //Player shots every XX ms
     this.spawnerShot = setInterval(() => {
       const newShot = new Shot(
         this.player.positionX + positionX,
-        this.player.positionY + positionY
+        this.player.positionY + positionY,
+        image
       );
       this.allShots.push(newShot);
     }, this.speedSpawnShot);
@@ -412,7 +432,8 @@ class Game {
             this.allCanons[index] = setInterval(() => {
               const newShot = new Shot(
                 this.player.positionX + this.positionCanon[index][0],
-                this.player.positionY + this.positionCanon[index][1]
+                this.player.positionY + this.positionCanon[index][1],
+                this.imageShot
               );
               this.allShots.push(newShot);
             }, this.speedSpawnShot);
@@ -428,13 +449,13 @@ class Game {
       case 3:
         //Bonus more bullets
         if (this.amountShot === 1) {
-          this.spawnShot(4, 10);
+          this.spawnShot(4, 10,this.imageShot);
           this.amountShot++;
         } else if (this.amountShot === 2) {
           this.amountShot++;
-          this.spawnShot(0, 3);
+          this.spawnShot(0, 3,this.imageShot);
         } else if (this.amountShot === 3) {
-          this.spawnShot(8, 3);
+          this.spawnShot(8, 3,this.imageShot);
           this.amountShot++;
         }
         break;

@@ -1,5 +1,5 @@
 class Player {
-  constructor() {
+  constructor(image) {
     this.width = 12;
     this.height = 12;
     this.initialPositionX = 100 / 2 - this.width / 2; //Centered
@@ -11,6 +11,26 @@ class Player {
     this.playerElm.style.bottom = this.positionY + "vh";
     this.playerElm.style.width = this.width + "vh";
     this.playerElm.style.height = this.height + "vh";
+    this.selectBackground(image);
+  }
+  selectBackground(image) {
+    switch (image) {
+      case 1:
+        this.playerElm.classList.add("spaceship1")
+        break;
+        case 2:
+        this.playerElm.classList.add("spaceship2")
+        break;
+        case 3:
+        this.playerElm.classList.add("spaceship3")
+        break;
+        case 4:
+        this.playerElm.classList.add("spaceship4")
+        break;
+
+      default:
+        break;
+    }
   }
   moveRight() {
     if (this.positionX < this.initialPositionX * 2) {
@@ -41,9 +61,9 @@ class Player {
     }
   }
   playerDamaged() {
-    this.playerElm.classList.add("player-takes-damage")
+    this.playerElm.classList.add("player-takes-damage");
     setTimeout(() => {
-      this.playerElm.classList.remove("player-takes-damage")
+      this.playerElm.classList.remove("player-takes-damage");
     }, 4000);
   }
 }

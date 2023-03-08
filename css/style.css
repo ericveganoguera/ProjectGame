@@ -54,10 +54,21 @@ body {
 }
 
 #player {
-    background-image: url(../Images/spaceship1.png);
     background-size: cover;
     background-repeat: no-repeat;
     position: absolute;
+}
+.spaceship1{
+    background-image: url(../Images/spaceship1.png);
+}
+.spaceship2{
+    background-image: url(../Images/spaceship2.png);
+}
+.spaceship3{
+    background-image: url(../Images/spaceship3.png);
+}
+.spaceship4{
+    background-image: url(../Images/spaceship4.png);
 }
 .enemy,.enemy2{
     background-size: cover;
@@ -108,10 +119,22 @@ body {
 .shot {
     /* background-color: red; */
     background-position: center;
-    background-image: url(../assets/shot2.png);
+
     background-size: cover;
     transform: rotate(-90deg);
     position: absolute;
+}
+.shot1{
+    background-image: url(../assets/shot1.png);
+}
+.shot2{
+    background-image: url(../assets/shot2.png);
+}
+.shot3{
+    background-image: url(../assets/shot3.png);
+}
+.shot4{
+    background-image: url(../assets/shot4.png);
 }
 
 .display-window {
@@ -251,7 +274,7 @@ body {
     font-weight: 600;
     color: #fdfdfe;
     text-shadow: 0px 0px 5px #b393d3, 0px 0px 10px #b393d3, 0px 0px 10px #b393d3,
-        0px 0px 20px #b393d3;
+    0px 0px 20px #b393d3;
 }
 #selector{
     display: flex;
@@ -260,6 +283,20 @@ body {
     gap: 1%;
     width: 100%;
     height: 60%;
+}
+#spaceship-start-button a{
+    cursor: pointer;
+    text-decoration: none;
+    font-weight: bold;
+    color: #fdfdfe;
+    font-size: 500%;
+    text-shadow: 0px 0px 5px black, 0px 0px 10px black, 0px 0px 10px black,
+        0px 0px 20px black;
+}
+#spaceship-start-button a:hover{
+    color: #fdfdfe;
+    text-shadow: 0px 0px 5px #b41d1d, 0px 0px 10px #b41d1d, 0px 0px 10px #b41d1d,
+        0px 0px 20px #b41d1d;
 }
 #selector > div{
     box-sizing: content-box;
@@ -272,10 +309,10 @@ body {
     border: 2px solid #fdfdfe;
 }
 #selector > div:active{
-    border: 2px solid darkgrey;
+    border: 2px solid #fdfdfe;
 }
 .clicked{
-    background-color: rgb(198, 1, 1);
+    border: 2px solid #fdfdfe !important
 }
 .spaceship{
     display: flex;
