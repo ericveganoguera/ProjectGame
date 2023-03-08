@@ -236,7 +236,62 @@ body {
     width: 100%;
     height: 100%;
 }
+#select-spaceship {
+    background-image: url(../assets/background-title.jpg);
+    background-size: cover;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+#select-spaceship h1 {
+    text-align: center;
+    font-size: 2vw;
+    font-weight: 600;
+    color: #fdfdfe;
+    text-shadow: 0px 0px 5px #b393d3, 0px 0px 10px #b393d3, 0px 0px 10px #b393d3,
+        0px 0px 20px #b393d3;
+}
+#selector{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1%;
+    width: 100%;
+    height: 60%;
+}
+#selector > div{
+    box-sizing: content-box;
+    width: 22%;
+    height: 400px;
+    border: 2px solid rgb(198, 1, 1);
+    border-radius: 10px;
+}
+#selector > div:hover{
+    border: 2px solid #fdfdfe;
+}
+#selector > div:active{
+    border: 2px solid darkgrey;
+}
+.clicked{
+    background-color: rgb(198, 1, 1);
+}
+.spaceship{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.spaceship div{
+    width: 100%;
+}
+.text-spaceship{
 
+    padding: 10px;
+    font-size: 1vw;
+    color: #fdfdfe;
+    text-align: center;
+}
 #intro h1 {
     text-align: center;
     font-size: 5vw;

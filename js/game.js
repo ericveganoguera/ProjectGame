@@ -14,7 +14,7 @@ class Game {
     ];
     this.speedSpawnShot = 700;
     this.speedMovement = speed;
-    this.randomBonus
+    this.randomBonus;
     this.amountShot = 1;
     this.intervalIds = [];
     this.timeoutIds = [];
@@ -43,7 +43,7 @@ class Game {
     this.audioMenu = new Audio("./sounds/background-menu.wav");
     this.audioBonusUp = new Audio("./sounds/bonus-up.ogg");
     this.audioBoss = new Audio("./sounds/background-boss.mp3");
-    this.audioWin = new Audio("./sounds/win.wav")
+    this.audioWin = new Audio("./sounds/win.wav");
   }
   volumeAudios() {
     this.audioGameOver.volume = this.volumeMusic;
@@ -53,7 +53,7 @@ class Game {
     this.audioMenu.volume = this.volumeMusic;
     this.audioBonusUp.volume = this.volumeEffects;
     this.audioBoss.volume = this.volumeMusic;
-    this.audioWin.volume = this.volumeMusic
+    this.audioWin.volume = this.volumeMusic;
   }
   reloadVolumeAudios() {
     this.barVolumeMusic.addEventListener("input", () => {
@@ -63,6 +63,45 @@ class Game {
     this.barVolumeEffect.addEventListener("input", () => {
       this.volumeEffects = this.barVolumeEffect.value / 100;
       this.volumeAudios();
+    });
+  }
+  spaceshipSelector() {
+    this.menu.remove();
+    (this.selectSpaceship = document.createElement("select-spaceship")),
+      this.selectSpaceship.setAttribute("id", "select-spaceship");
+    this.selectSpaceship.innerHTML = `
+      <div id="title"></div>
+      <h1>SPACESHIP SELECTOR</h1>
+      <div id="selector">
+          <div class="spaceship">
+              <div><img src="./Images/spaceship1.png" width="100%"></div>
+              <div class="text-spaceship">Spaceship 1</div>
+          </div>
+          <div class="spaceship">
+              <div><img src="./Images/spaceship2.png" width="100%"></div>
+              <div class="text-spaceship">Spaceship 2</div>
+          </div>
+          <div class="spaceship">
+              <div><img src="./Images/spaceship3.png" width="100%"></div>
+              <div class="text-spaceship">Spaceship 3</div>
+          </div>
+          <div class="spaceship">
+              <div><img src="./Images/spaceship4.png" width="100%"></div>
+              <div class="text-spaceship">Spaceship 3</div>
+          </div>
+          </div>
+          <div id="start-button">
+          <a href="#" onclick="start()"draggable="false">START</a></div>
+      `;
+    this.boardElm.prepend(this.selectSpaceship);
+    this.spaceshipSelected = [...document.getElementsByClassName("spaceship")];
+    this.spaceshipSelected.forEach((element) => {
+      element.addEventListener("click", () => {
+        this.spaceshipSelected.forEach((element2) => {
+          element2.classList.remove("clicked")
+        })
+        element.classList.add("clicked");
+      });
     });
   }
   intro() {
@@ -80,16 +119,15 @@ class Game {
     <p>Use your arrow to move!</p>
     </div>
     <div id="start-button">
-    <a href="#" onclick="start()"draggable="false">START</a>
+    <a href="#" onclick="selectorSpaceship()"draggable="false">START</a>
     <a id="options-display" onclick="options()">Options</a>
     </div>
     </div>
     `;
     this.boardElm.prepend(this.menu);
-    
   }
   start() {
-    this.menu.remove();
+    this.selectSpaceship.remove();
     this.scoreId.style.display = "flex";
     this.healthId.style.display = "flex";
     this.audioMenu.pause();
@@ -99,7 +137,7 @@ class Game {
     this.player = new Player();
     this.spawnShot(this.positionCanon[0][0], this.positionCanon[0][1]);
     this.spawnShot(this.positionCanon[1][0], this.positionCanon[1][1]);
-    this.spawnEnemy(0.4, 1200, 1,15000);
+    this.spawnEnemy(0.4, 1200, 1, 15000);
     this.spawnMeteor();
     this.spawnBonus();
     this.spawnBoss(500, 1);
@@ -121,13 +159,13 @@ class Game {
       incrementVolume();
     };
     setTimeout(() => {
-      this.spawnEnemy(0.5, 1000, 2,0);
+      this.spawnEnemy(0.5, 1000, 2, 0);
     }, 5000);
     setTimeout(() => {
       clearInterval(this.spawnerEnemy);
-      setTimeout(()=>{
+      setTimeout(() => {
         this.spawnBoss(3000, 2);
-      },4000)
+      }, 4000);
     }, 40000);
   }
   attachEventListeners() {
@@ -147,7 +185,7 @@ class Game {
       this.player.playerElm.classList.remove("move-down");
     });
   }
-  spawnEnemy(movementSpeed, spawnInterval, classEnemy,firstSpawn) {
+  spawnEnemy(movementSpeed, spawnInterval, classEnemy, firstSpawn) {
     //Spawn enemies every spawnInterval with movementSpeed after 15 seconds
     this.firstSpawnEnemy = setTimeout(() => {
       //Stop meteor spawn
@@ -353,10 +391,9 @@ class Game {
             this.score.innerHTML = Number(this.score.innerHTML) + 100;
             this.audioBoss.pause();
             if (this.firstWave) {
-              this.firstWave = false
+              this.firstWave = false;
               this.secondWave();
-            }
-            else if (!this.firstWave) this.displayWin()
+            } else if (!this.firstWave) this.displayWin();
           }
         }
       }
@@ -499,8 +536,8 @@ class Game {
   }
   displayWin() {
     this.clearIntervals();
-    this.audioGame2.pause()
-    this.audioWin.play()
+    this.audioGame2.pause();
+    this.audioWin.play();
     this.displayEnd = document.createElement("div");
     this.displayEnd.setAttribute("class", "display-window");
     this.displayEnd.innerHTML = `
@@ -528,6 +565,9 @@ class Game {
 
 function start() {
   game.start();
+}
+function selectorSpaceship() {
+  game.spaceshipSelector();
 }
 
 const optionsDisplay = document.getElementById("options");
