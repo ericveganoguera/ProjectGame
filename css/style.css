@@ -59,19 +59,28 @@ body {
     background-repeat: no-repeat;
     position: absolute;
 }
-
-.enemy {
-    background-image: url(.././Images/enemy1.png);
+.enemy,.enemy2{
     background-size: cover;
     position: absolute;
 }
+.enemy {
+    background-image: url(.././Images/enemy1.png);
+}
+.enemy2 {
+    background-image: url(.././Images/enemy2.png);
+}
 
-.boss {
-    background-image: url(.././Images/boss1.gif);
+.boss,.boss2 {
     background-repeat: no-repeat;
     background-position: center;
     background-size: contain;
     position: absolute;
+}
+.boss{
+    background-image: url(.././Images/boss1.gif);
+}
+.boss2{
+    background-image: url(.././Images/boss2.gif);
 }
 
 .bonus {

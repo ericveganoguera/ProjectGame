@@ -19,19 +19,19 @@ class Bonus {
     switch (this.modify) {
       case 1:
         //Bonus attack speed
-        this.bonusSpawn.classList.add("bonus-attack-speed")
+        this.bonusSpawn.classList.add("bonus-attack-speed");
         break;
       case 2:
         //Bonus movement speed
-        this.bonusSpawn.classList.add("bonus-speed-movement")
+        this.bonusSpawn.classList.add("bonus-speed-movement");
         break;
       case 3:
         //Bonus more bullets
-        this.bonusSpawn.classList.add("bonus-more-bullets")
+        this.bonusSpawn.classList.add("bonus-more-bullets");
         break;
-        case 4:
-          //Bonus to health the player!
-        this.bonusSpawn.classList.add("bonus-health")
+      case 4:
+        //Bonus to health the player!
+        this.bonusSpawn.classList.add("bonus-health");
         break;
     }
   }

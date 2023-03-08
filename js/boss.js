@@ -1,18 +1,19 @@
 class Boss{
-    constructor(speed) {
+    constructor(speed,health,classBoss) {
       this.speedMovement = speed;
-      this.health = 200;
+      this.health = health;
       this.maxHealth = this.health;
       this.width = 73;
       this.height = 30;
       this.positionX = 100 / 2 - this.width / 2;
       this.positionY = 100;
       this.canCreateHealthBar = false;
-      this.createDomElementBoss();
+      this.createDomElementBoss(classBoss);
     }
-    createDomElementBoss() {
+    createDomElementBoss(classBoss) {
       this.enemySpawn = document.createElement("div");
-      this.enemySpawn.setAttribute("class", "boss");
+      if (classBoss === 1) this.enemySpawn.classList.add("boss");
+      if (classBoss === 2) this.enemySpawn.classList.add("boss2");
       this.enemySpawn.setAttribute("style", `left:${this.positionX}vh`);
       this.boardElm = document.getElementById("board");
       this.boardElm.appendChild(this.enemySpawn);

@@ -3,9 +3,18 @@ class Game {
     this.allEnemies = [];
     this.allMeteor = [];
     this.allShots = [];
+    this.allCanons = [];
     this.allBonus = [];
+    this.positionCanon = [
+      [2, 3],
+      [6, 3],
+      [4, 10],
+      [0, 3],
+      [8, 3],
+    ];
     this.speedSpawnShot = 700;
     this.speedMovement = speed;
+    this.randomBonus
     this.amountShot = 1;
     this.intervalIds = [];
     this.timeoutIds = [];
@@ -29,6 +38,7 @@ class Game {
   audios() {
     this.audioGameOver = new Audio("./sounds/game-over.wav");
     this.audioBackgroundGame = new Audio("./sounds/background-game.mp3");
+    this.audioGame2 = new Audio("./sounds/background-game-2.mp3");
     this.audioEnemyDie = new Audio("./sounds/enemy-die.wav");
     this.audioMenu = new Audio("./sounds/background-menu.wav");
     this.audioBonusUp = new Audio("./sounds/bonus-up.ogg");
@@ -37,6 +47,7 @@ class Game {
   volumeAudios() {
     this.audioGameOver.volume = this.volumeMusic;
     this.audioBackgroundGame.volume = this.volumeMusic;
+    this.audioGame2.volume = this.volumeMusic;
     this.audioEnemyDie.volume = this.volumeEffects;
     this.audioMenu.volume = this.volumeMusic;
     this.audioBonusUp.volume = this.volumeEffects;
@@ -45,11 +56,9 @@ class Game {
   reloadVolumeAudios() {
     this.barVolumeMusic.addEventListener("input", () => {
       this.volumeMusic = this.barVolumeMusic.value / 100;
-      console.log(this.volumeMusic);
       this.volumeAudios();
     });
     this.barVolumeEffect.addEventListener("input", () => {
-      console.log(this.volumeEffects);
       this.volumeEffects = this.barVolumeEffect.value / 100;
       this.volumeAudios();
     });
@@ -84,18 +93,39 @@ class Game {
     this.audioBackgroundGame.loop = true;
     this.audioBackgroundGame.play();
     this.player = new Player();
-    this.spawnShot(2, 3);
-    this.spawnShot(6, 3);
-    this.spawnEnemy(0.4, 800);
+    this.spawnShot(this.positionCanon[0][0], this.positionCanon[0][1]);
+    this.spawnShot(this.positionCanon[1][0], this.positionCanon[1][1]);
+    this.spawnEnemy(0.4, 1200, 1);
     this.spawnMeteor();
     this.spawnBonus();
-    this.spawnBoss();
+    this.spawnBoss(500, 1);
     this.moveEnemy();
     this.moveMeteor();
     this.moveShot(0.8);
     this.moveBonus();
     this.attachEventListeners();
     this.movePlayer();
+  }
+  secondWave() {
+    this.audioGame2.loop = true;
+    this.audioGame2.volume = 0;
+    this.audioGame2.play();
+    const incrementVolume = () => {
+      if (this.audioBackgroundGame2.volume < this.volumeMusic) {
+        this.audioBackgroundGame2.volume += 0.1;
+        setTimeout(incrementVolume, 1000);
+      }
+      incrementVolume();
+    };
+    setTimeout(() => {
+      this.spawnEnemy(0.5, 1000, 2);
+    }, 5000);
+    setTimeout(() => {
+      clearInterval(this.spawnerEnemy);
+      setTimeout(()=>{
+        this.spawnBoss(3000, 2);
+      },4000)
+    }, 40000);
   }
   attachEventListeners() {
     //Player movement with arrow keys
@@ -114,20 +144,20 @@ class Game {
       this.player.playerElm.classList.remove("move-down");
     });
   }
-  spawnEnemy(movementSpeed, spawnInterval) {
+  spawnEnemy(movementSpeed, spawnInterval, classEnemy) {
     //Spawn enemies every spawnInterval with movementSpeed after 15 seconds
     this.firstSpawnEnemy = setTimeout(() => {
       //Stop meteor spawn
       clearInterval(this.spawnerMeteor);
       this.spawnerEnemy = setInterval(() => {
-        const newEnemy = new Enemy(movementSpeed);
+        const newEnemy = new Enemy(movementSpeed, classEnemy);
         this.allEnemies.push(newEnemy);
       }, spawnInterval);
       this.intervalIds.push(this.spawnerEnemy);
     }, 15000);
     this.timeoutIds.push(this.firstSpawnEnemy);
   }
-  spawnBoss() {
+  spawnBoss(health, classboss) {
     //Spawn boss with timeout 60 seconds
     this.spawnerBoss = setTimeout(() => {
       //Stop enemy spawn
@@ -149,7 +179,7 @@ class Game {
       }, 4000);
       //Spawn boss with a delay of 10s!
       this.timeoutBoss = setTimeout(() => {
-        const newBoss = new Boss(0.2);
+        const newBoss = new Boss(0.2, health, classboss);
         this.allEnemies.push(newBoss);
       }, 10000);
       this.intervalIds.push(this.timeoutBoss);
@@ -166,20 +196,20 @@ class Game {
   spawnShot(positionX, positionY) {
     //Player shots every XX ms
     this.spawnerShot = setInterval(() => {
-      const newShotLeft = new Shot(
+      const newShot = new Shot(
         this.player.positionX + positionX,
         this.player.positionY + positionY
       );
-      this.allShots.push(newShotLeft);
+      this.allShots.push(newShot);
     }, this.speedSpawnShot);
-    this.intervalIds.push(this.spawnerShot);
+    this.allCanons.push(this.spawnerShot);
   }
   spawnBonus() {
     this.spawnerBonus = setInterval(() => {
       this.randomBonus = Math.floor(Math.random() * 4) + 1;
       const newBonus = new Bonus(this.randomBonus);
       this.allBonus.push(newBonus);
-    }, 7000);
+    }, 3000);
     this.intervalIds.push(this.spawnerBonus);
   }
   moveShot(speed) {
@@ -254,7 +284,7 @@ class Game {
     }
     this.movementPlayer = setTimeout(() => {
       this.movePlayer();
-    }, 8);
+    }, 32);
     this.intervalIds.push(this.movementPlayer);
   }
   detectCollision(enemy, indexEnemy) {
@@ -267,9 +297,9 @@ class Game {
       if (enemy instanceof Bonus) {
         this.removeBonus(enemy, indexEnemy);
         this.audioBonusUp.play();
-        this.selectBonus(this.randomBonus);
+        this.selectBonus(enemy);
       } else {
-        if (this.health.innerHTML <= 1) {
+        if (this.health.innerHTML < 1) {
           this.displayGameOver();
           this.playerTakesDamage();
         } else if (!this.playerDamageDelay) {
@@ -296,9 +326,15 @@ class Game {
         enemy.positionY < shot.positionY + shot.height &&
         enemy.positionY + enemy.height > shot.positionY
       ) {
-        this.removeShot(shot, index);
+        if (
+          enemy instanceof Meteor ||
+          enemy instanceof Enemy ||
+          enemy instanceof Boss
+        )
+          this.removeShot(shot, index);
         enemy.health--;
         if (enemy.health <= 1) {
+          this.audioEnemyDie.play();
           if (enemy instanceof Meteor) {
             this.removeMeteor(enemy, indexEnemy);
             this.score.innerHTML++;
@@ -307,49 +343,59 @@ class Game {
             this.removeEnemy(enemy, indexEnemy);
             this.score.innerHTML = Number(this.score.innerHTML) + 2;
           }
-          this.audioEnemyDie.play();
           if (enemy instanceof Boss) {
             enemy.bossHealthBar.remove();
             this.removeEnemy(enemy, indexEnemy);
             this.score.innerHTML = Number(this.score.innerHTML) + 100;
+            this.audioBoss.pause();
+            this.secondWave();
           }
         }
       }
     });
   }
-  selectBonus(modify) {
-    switch (modify) {
+  selectBonus(bonus) {
+    switch (bonus.modify) {
       case 1:
         //More atack speed!!!
         if (this.speedSpawnShot > 100) {
           this.speedSpawnShot -= 50;
+          this.allCanons.forEach((canon, index) => {
+            //Stop spawner shot interval
+            clearInterval(canon);
+            //Foreach shot interval, call again with speedspawnshot modified
+            this.allCanons[index] = setInterval(() => {
+              const newShot = new Shot(
+                this.player.positionX + this.positionCanon[index][0],
+                this.player.positionY + this.positionCanon[index][1]
+              );
+              this.allShots.push(newShot);
+            }, this.speedSpawnShot);
+          });
         }
         break;
       case 2:
         //More speed movement
-        if (this.player.speedMovement < 1.5) {
-          this.player.speedMovement += 0.1;
+        if (this.player.speedMovement < 3) {
+          this.player.speedMovement += 0.2;
         }
         break;
       case 3:
         //Bonus more bullets
         if (this.amountShot === 1) {
-          console.log("1");
           this.spawnShot(4, 10);
           this.amountShot++;
         } else if (this.amountShot === 2) {
-          console.log("2");
           this.amountShot++;
           this.spawnShot(0, 3);
         } else if (this.amountShot === 3) {
-          console.log("3");
-          this.spawnShot(10, 3);
+          this.spawnShot(8, 3);
           this.amountShot++;
         }
         break;
       case 4:
         //Bonus to health the player!
-        if (this.health.innerHTML < 3) this.health.innerHTML++
+        if (this.health.innerHTML < 3) this.health.innerHTML++;
         break;
     }
   }
@@ -418,6 +464,9 @@ class Game {
     }
     for (let i = 0; i < this.timeoutIds.length; i++) {
       clearTimeout(this.timeoutIds[i]);
+    }
+    for (let i = 0; i < this.allCanons.length; i++) {
+      clearTimeout(this.allCanons[i]);
     }
   }
   playerTakesDamage() {

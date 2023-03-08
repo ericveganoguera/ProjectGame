@@ -1,16 +1,17 @@
 class Enemy {
-  constructor(speed) {
+  constructor(speed,classEnemy) {
     this.width = 6;
     this.height = 6;
     this.positionX = Math.floor(Math.random() * 20) * 5;
     this.positionY = 110;
     this.health = 2;
     this.speedMovement = speed;
-    this.createDomElement();
+    this.createDomElement(classEnemy);
   }
-  createDomElement() {
+  createDomElement(classEnemy) {
     this.enemySpawn = document.createElement("div");
-    this.enemySpawn.classList.add("enemy");
+    if (classEnemy === 1) this.enemySpawn.classList.add("enemy");
+    if (classEnemy === 2) this.enemySpawn.classList.add("enemy2");
     this.enemySpawn.style.left = `${this.positionX}vh`
     this.boardElm = document.getElementById("board");
     this.boardElm.appendChild(this.enemySpawn);
