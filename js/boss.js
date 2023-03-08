@@ -22,13 +22,12 @@ class Boss{
       this.createHealthBar();
     }
     moveDown() {
+      this.enemyHealthPercent = (this.health / this.maxHealth) * 100;
+      this.bossHealthBar.style.width = this.enemyHealthPercent + "%";
       if (this.positionY > 70) {
         this.positionY -= this.speedMovement;
         this.enemySpawn.style.bottom = this.positionY + "vh";
-      } else {
-        this.enemyHealthPercent = (this.health / this.maxHealth) * 100;
-        this.bossHealthBar.style.width = this.enemyHealthPercent + "%";
-      }
+      } 
     }
     createHealthBar() {
       this.bossHealthBar = document.createElement("div");

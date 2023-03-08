@@ -43,6 +43,7 @@ class Game {
     this.audioMenu = new Audio("./sounds/background-menu.wav");
     this.audioBonusUp = new Audio("./sounds/bonus-up.ogg");
     this.audioBoss = new Audio("./sounds/background-boss.mp3");
+    this.audioWin = new Audio("./sounds/win.wav")
   }
   volumeAudios() {
     this.audioGameOver.volume = this.volumeMusic;
@@ -52,6 +53,7 @@ class Game {
     this.audioMenu.volume = this.volumeMusic;
     this.audioBonusUp.volume = this.volumeEffects;
     this.audioBoss.volume = this.volumeMusic;
+    this.audioWin.volume = this.volumeMusic
   }
   reloadVolumeAudios() {
     this.barVolumeMusic.addEventListener("input", () => {
@@ -92,11 +94,12 @@ class Game {
     this.healthId.style.display = "flex";
     this.audioMenu.pause();
     this.audioBackgroundGame.loop = true;
+    this.firstWave = true;
     this.audioBackgroundGame.play();
     this.player = new Player();
     this.spawnShot(this.positionCanon[0][0], this.positionCanon[0][1]);
     this.spawnShot(this.positionCanon[1][0], this.positionCanon[1][1]);
-    this.spawnEnemy(0.4, 1200, 1);
+    this.spawnEnemy(0.4, 1200, 1,15000);
     this.spawnMeteor();
     this.spawnBonus();
     this.spawnBoss(500, 1);
@@ -109,7 +112,6 @@ class Game {
   }
   secondWave() {
     this.audioGame2.loop = true;
-    this.audioGame2.volume = 0;
     this.audioGame2.play();
     const incrementVolume = () => {
       if (this.audioBackgroundGame2.volume < this.volumeMusic) {
@@ -119,7 +121,7 @@ class Game {
       incrementVolume();
     };
     setTimeout(() => {
-      this.spawnEnemy(0.5, 1000, 2);
+      this.spawnEnemy(0.5, 1000, 2,0);
     }, 5000);
     setTimeout(() => {
       clearInterval(this.spawnerEnemy);
@@ -145,7 +147,7 @@ class Game {
       this.player.playerElm.classList.remove("move-down");
     });
   }
-  spawnEnemy(movementSpeed, spawnInterval, classEnemy) {
+  spawnEnemy(movementSpeed, spawnInterval, classEnemy,firstSpawn) {
     //Spawn enemies every spawnInterval with movementSpeed after 15 seconds
     this.firstSpawnEnemy = setTimeout(() => {
       //Stop meteor spawn
@@ -155,7 +157,7 @@ class Game {
         this.allEnemies.push(newEnemy);
       }, spawnInterval);
       this.intervalIds.push(this.spawnerEnemy);
-    }, 15000);
+    }, firstSpawn);
     this.timeoutIds.push(this.firstSpawnEnemy);
   }
   spawnBoss(health, classboss) {
@@ -166,6 +168,7 @@ class Game {
       setTimeout(() => {
         //Stop background music and play boss music
         this.audioBackgroundGame.pause();
+        this.audioGame2.pause();
         this.audioBoss.play();
         this.audioBoss.loop = true;
         this.audioBoss.volume = 0;
@@ -349,7 +352,11 @@ class Game {
             this.removeEnemy(enemy, indexEnemy);
             this.score.innerHTML = Number(this.score.innerHTML) + 100;
             this.audioBoss.pause();
-            this.secondWave();
+            if (this.firstWave) {
+              this.firstWave = false
+              this.secondWave();
+            }
+            else if (!this.firstWave) this.displayWin()
           }
         }
       }
@@ -485,6 +492,19 @@ class Game {
     this.displayEnd.setAttribute("class", "display-window");
     this.displayEnd.innerHTML = `
     <h1 id="game-over-h1">Game over</h1>
+    <p>Score : ${this.score.innerHTML}</p>
+    <a href="#" onclick="location.reload()">Back to menu</a>
+    `;
+    this.boardElm.appendChild(this.displayEnd);
+  }
+  displayWin() {
+    this.clearIntervals();
+    this.audioGame2.pause()
+    this.audioWin.play()
+    this.displayEnd = document.createElement("div");
+    this.displayEnd.setAttribute("class", "display-window");
+    this.displayEnd.innerHTML = `
+    <h1 id="game-over-h1">WIN!!</h1>
     <p>Score : ${this.score.innerHTML}</p>
     <a href="#" onclick="location.reload()">Back to menu</a>
     `;
