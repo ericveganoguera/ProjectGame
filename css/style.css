@@ -1,3 +1,12 @@
+@keyframes flashAnimation {
+    from {
+        opacity: 0.5;
+    }
+
+    to {
+        opacity: 0;
+    }
+}
 @keyframes scroll {
     0% {
         background-position: bottom;
@@ -8,6 +17,20 @@
     }
 }
 
+@keyframes player-dmg {
+    0% {
+        opacity: 0;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+    }
+}
+/* General styles */
 body {
     margin: 0;
     padding: 0;
@@ -23,9 +46,8 @@ body {
     user-select: none;
     /* Standard syntax */
 }
-
+/* Board styles */
 #board {
-    /* background-color: lightgray; */
     background-image: url(../assets/background1.png);
     background-size: 100%;
     box-sizing: border-box;
@@ -38,25 +60,34 @@ body {
     overflow: hidden;
     animation: scroll 3s linear infinite;
 }
-
+/*Show the score*/
 #id-score {
     display: none;
     position: absolute;
     bottom: 0;
     right: 0;
 }
-
+/*Show the health's player*/
 #id-health {
     display: none;
     position: absolute;
     bottom: 0;
     left: 0;
 }
-
+/*Size of the player*/
 #player {
     background-size: cover;
     background-repeat: no-repeat;
     position: absolute;
+}
+/*Styles of the spaceship*/
+.spaceship{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.spaceship div{
+    width: 100%;
 }
 .spaceship1{
     background-image: url(../Images/spaceship1.png);
@@ -115,11 +146,8 @@ body {
     background-size: cover;
     position: absolute;
 }
-
 .shot {
-    /* background-color: red; */
     background-position: center;
-
     background-size: cover;
     transform: rotate(-90deg);
     position: absolute;
@@ -137,22 +165,6 @@ body {
     background-image: url(../assets/shot4.png);
 }
 
-.display-window {
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    position: absolute;
-    text-align: center;
-    top: 25vh;
-    flex-direction: column;
-    background-color: rgb(97, 97, 97);
-    width: 30vw;
-    height: 50vh;
-    border-radius: 50px;
-    border: 3px solid red;
-    color: white;
-}
-
 #options {
     display: none;
     justify-content: center;
@@ -162,52 +174,39 @@ body {
     height: 50vh;
     gap: 10px;
 }
-
 #options label {
     font-size: 1vw;
     color: #fdfdfe;
-
 }
-
 #options-id {
     font-size: 2vw;
     color: #fdfdfe;
     text-shadow: 0px 0px 5px #b393d3, 0px 0px 10px #b393d3, 0px 0px 10px #b393d3,
         0px 0px 20px #b393d3;
 }
-
-#options-display {
-    font-size: 2vw !important;
-}
-
 #save-options {
     color: #fdfdfe;
     text-shadow: 0px 0px 5px black, 0px 0px 10px black, 0px 0px 10px black,
         0px 0px 20px black;
 }
-
 #save-options:hover {
     color: #fdfdfe;
     text-shadow: 0px 0px 5px #b41d1d, 0px 0px 10px #b41d1d, 0px 0px 10px #b41d1d,
         0px 0px 20px #b41d1d;
 }
-
-#pause-title a {
-    font-size: 2vw;
-}
-
-#pause-title>h1 {
-    font-size: 5vw;
-    height: 10%;
-}
-
 #pause {
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
 }
-
+#pause-title a {
+    font-size: 2vw;
+}
+#pause-title>h1 {
+    font-size: 5vw;
+    height: 10%;
+}
 #pause-h1 {
     font-size: 10vh;
     margin-bottom: 10%;
@@ -218,11 +217,7 @@ body {
     margin-bottom: 10%;
 }
 
-.display-window a {
-    font-size: 3vw;
-    text-decoration: none;
-    color: white;
-}
+
 
 #board p {
     font-size: 2vw;
@@ -314,14 +309,7 @@ body {
 .clicked{
     border: 2px solid #fdfdfe !important
 }
-.spaceship{
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-}
-.spaceship div{
-    width: 100%;
-}
+
 .text-spaceship{
 
     padding: 10px;
@@ -337,21 +325,16 @@ body {
     text-shadow: 0px 0px 5px #b393d3, 0px 0px 10px #b393d3, 0px 0px 10px #b393d3,
         0px 0px 20px #b393d3;
 }
-
 #instructions {
     display: flex;
     justify-content: flex-end;
     align-items: center;
     margin-top: 5%;
 }
-
-
 #instructions div {
     box-sizing: content-box;
     margin: 0 40px;
-
 }
-
 #instructions div a:hover {
     color: #fdfdfe;
     text-shadow: 0px 0px 5px #b41d1d, 0px 0px 10px #b41d1d, 0px 0px 10px #b41d1d,
@@ -394,7 +377,6 @@ body {
     text-align: center;
     width: 40%;
 }
-
 .health-bar {
     position: absolute;
     top: 0;
@@ -402,11 +384,9 @@ body {
     height: 20px;
     background-color: red;
 }
-
 .volume-bar {
     width: 100%;
 }
-
 .flash {
     position: absolute;
     top: 0;
@@ -418,31 +398,29 @@ body {
     pointer-events: none;
     animation: flashAnimation 0.5s forwards;
 }
-
-@keyframes flashAnimation {
-    from {
-        opacity: 0.5;
-    }
-
-    to {
-        opacity: 0;
-    }
-}
-
 .player-takes-damage {
     animation: player-dmg 0.5s ease-in-out infinite;
 }
-
-@keyframes player-dmg {
-    0% {
-        opacity: 0;
-    }
-
-    50% {
-        opacity: 1;
-    }
-
-    100% {
-        opacity: 0;
-    }
+.display-window {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    position: absolute;
+    text-align: center;
+    top: 25vh;
+    flex-direction: column;
+    background-color: rgb(97, 97, 97);
+    width: 30vw;
+    height: 50vh;
+    border-radius: 50px;
+    border: 3px solid red;
+    color: white;
+}
+.display-window a {
+    font-size: 3vw;
+    text-decoration: none;
+    color: white;
+}
+#options-display {
+    font-size: 2vw !important;
 }

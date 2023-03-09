@@ -1,6 +1,6 @@
 class Boss{
-    constructor(speed,health,classBoss) {
-      this.speedMovement = speed;
+    constructor(health,classBoss) {
+      this.speedMovement = 0.2;
       this.health = health;
       this.maxHealth = this.health;
       this.width = 73;
@@ -13,7 +13,7 @@ class Boss{
     createDomElementBoss(classBoss) {
       this.enemySpawn = document.createElement("div");
       if (classBoss === 1) this.enemySpawn.classList.add("boss");
-      if (classBoss === 2) this.enemySpawn.classList.add("boss2");
+      if (classBoss === 2)this.enemySpawn.classList.add("boss2");
       this.enemySpawn.setAttribute("style", `left:${this.positionX}vh`);
       this.boardElm = document.getElementById("board");
       this.boardElm.appendChild(this.enemySpawn);

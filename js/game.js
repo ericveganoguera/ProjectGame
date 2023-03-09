@@ -13,7 +13,7 @@ class Game {
       [8, 3],
     ];
     this.speedSpawnShot = 700;
-    this.imageShot = 0
+    this.imageShot = 0;
     this.speedMovement = speed;
     this.randomBonus;
     this.amountShot = 1;
@@ -136,17 +136,17 @@ class Game {
     ];
     if (this.textSpaceship[0].innerHTML.includes("1")) {
       this.player = new Player(1);
-      this.imageShot = 1
+      this.imageShot = 1;
     } else if (this.textSpaceship[0].innerHTML.includes("2")) {
       this.player = new Player(2);
-      this.imageShot = 2
+      this.imageShot = 2;
     } else if (this.textSpaceship[0].innerHTML.includes("3")) {
       this.player = new Player(3);
-      this.imageShot = 3
+      this.imageShot = 3;
     } else if (this.textSpaceship[0].innerHTML.includes("4")) {
       this.player = new Player(4);
-      this.imageShot = 4
-    } 
+      this.imageShot = 4;
+    }
     this.selectSpaceship.remove();
     this.scoreId.style.display = "flex";
     this.healthId.style.display = "flex";
@@ -154,8 +154,16 @@ class Game {
     this.audioBackgroundGame.loop = true;
     this.firstWave = true;
     this.audioBackgroundGame.play();
-    this.spawnShot(this.positionCanon[0][0], this.positionCanon[0][1],this.imageShot);
-    this.spawnShot(this.positionCanon[1][0], this.positionCanon[1][1],this.imageShot);
+    this.spawnShot(
+      this.positionCanon[0][0],
+      this.positionCanon[0][1],
+      this.imageShot
+    );
+    this.spawnShot(
+      this.positionCanon[1][0],
+      this.positionCanon[1][1],
+      this.imageShot
+    );
     this.spawnEnemy(0.4, 1200, 1, 15000);
     this.spawnMeteor();
     this.spawnBonus();
@@ -180,12 +188,8 @@ class Game {
     setTimeout(() => {
       this.spawnEnemy(0.5, 1000, 2, 0);
     }, 5000);
-    setTimeout(() => {
-      clearInterval(this.spawnerEnemy);
-      setTimeout(() => {
-        this.spawnBoss(3000, 2);
-      }, 4000);
-    }, 40000);
+    this.spawnBoss(3000, 2);
+    console.log(this.firstWave)
   }
   attachEventListeners() {
     //Player movement with arrow keys
@@ -240,7 +244,7 @@ class Game {
       }, 4000);
       //Spawn boss with a delay of 10s!
       this.timeoutBoss = setTimeout(() => {
-        const newBoss = new Boss(0.2, health, classboss);
+        const newBoss = new Boss(health, classboss);
         this.allEnemies.push(newBoss);
       }, 10000);
       this.intervalIds.push(this.timeoutBoss);
@@ -254,7 +258,7 @@ class Game {
     }, 1000);
     this.intervalIds.push(this.spawnerMeteor);
   }
-  spawnShot(positionX, positionY,image) {
+  spawnShot(positionX, positionY, image) {
     //Player shots every XX ms
     this.spawnerShot = setInterval(() => {
       const newShot = new Shot(
@@ -449,13 +453,13 @@ class Game {
       case 3:
         //Bonus more bullets
         if (this.amountShot === 1) {
-          this.spawnShot(4, 10,this.imageShot);
+          this.spawnShot(4, 10, this.imageShot);
           this.amountShot++;
         } else if (this.amountShot === 2) {
           this.amountShot++;
-          this.spawnShot(0, 3,this.imageShot);
+          this.spawnShot(0, 3, this.imageShot);
         } else if (this.amountShot === 3) {
-          this.spawnShot(8, 3,this.imageShot);
+          this.spawnShot(8, 3, this.imageShot);
           this.amountShot++;
         }
         break;
@@ -480,49 +484,6 @@ class Game {
   removeBonus(bonus, index) {
     bonus.bonusSpawn.remove();
     this.allBonus.splice(index, 1);
-  }
-  saveIntervalTime(id) {
-    const startTime = Date.now();
-    return function () {
-      const endTime = Date.now();
-      this.intervalTimes[id] -= endTime - startTime;
-    };
-  }
-  saveTimeoutTime(id) {
-    const startTime = Date.now();
-    return function () {
-      const endTime = Date.now();
-      this.timeoutTimes[id] -= endTime - startTime;
-    };
-  }
-  resumeIntervalsAndTimeouts() {
-    for (let i = 0; i < this.intervalIds.length; i++) {
-      setInterval(this.intervalIds[i]);
-    }
-    for (let i = 0; i < this.timeoutIds.length; i++) {
-      setInterval(this.timeoutIds[i]);
-    }
-    // for (let i = 0; i < this.intervalIds.length; i++) {
-    //   const id = this.intervalIds[i];
-    //   const timeRemaining = this.intervalTimes[i];
-
-    //   const intervalFunc = this.saveIntervalTime(i);
-    //   this.intervalIds[i] = setInterval(function () {
-    //     // ...
-    //     intervalFunc(i);
-    //   }, timeRemaining);
-    // }
-
-    // for (let i = 0; i < this.timeoutIds.length; i++) {
-    //   const id = this.timeoutIds[i];
-    //   const timeRemaining = this.timeoutTimes[i];
-
-    //   const timeoutFunc = this.saveTimeoutTime(i);
-    //   this.timeoutIds[i] = setTimeout(function () {
-    //     // ...
-    //     timeoutFunc(i);
-    //   }, timeRemaining);
-    // }
   }
   clearIntervals() {
     for (let i = 0; i < this.intervalIds.length; i++) {

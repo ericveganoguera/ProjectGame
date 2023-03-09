@@ -15,9 +15,9 @@ class Meteor {
     this.meteorSpawn.style.left = `${this.positionX}vh`;
     this.meteorSpawn.style.bottom = `${this.positionY}vh`;
     this.boardElm = document.getElementById("board");
-    this.boardElm.appendChild(this.meteorSpawn);
     this.meteorSpawn.style.width = this.width + "vh";
     this.meteorSpawn.style.height = this.height + "vh";
+    this.boardElm.appendChild(this.meteorSpawn);
   }
   moveRight() {
     if (this.changeDirection) {
