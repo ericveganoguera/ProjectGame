@@ -167,6 +167,12 @@ body {
 .shot5{
     background-image: url(../assets/shot5.png);
     transform: rotate(90deg);
+    border: 1px solid red;
+}
+.shot6{
+    background-image: url(../assets/shot6.png);
+    transform: rotate(90deg);
+    border: 1px solid red;
 }
 
 #options {

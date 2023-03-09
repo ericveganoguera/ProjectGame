@@ -28,3 +28,4 @@ Tasks for a better game
 
 - Bug enemies often stop and not desapear
 - Bug when collision detected, player and enemy don't exactly match
+- Bug when win the game, the score are not the same

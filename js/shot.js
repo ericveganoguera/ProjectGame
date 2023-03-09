@@ -45,7 +45,13 @@ class Shot {
           this.shotSpawn.style.width = this.width + "vh"
           this.shotSpawn.style.height = this.height + "vh"
           break;
-  
+          case 6:
+          this.shotSpawn.classList.add("shot6")
+          this.width = 70;
+          this.height = 35;
+          this.shotSpawn.style.width = this.width + "vh"
+          this.shotSpawn.style.height = this.height + "vh"
+          break;
         default:
           break;
       }

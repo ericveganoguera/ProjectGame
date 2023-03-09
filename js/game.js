@@ -20,6 +20,7 @@ class Game {
     this.amountShot = 1;
     this.intervalIds = [];
     this.timeoutIds = [];
+    this.allIntervalBossShots=[]
     this.playerDamageDelay = false;
     this.keysDown = {};
     this.volumeMusic = 0.5;
@@ -49,6 +50,16 @@ class Game {
     this.audioBonusUp = new Audio("./sounds/bonus-up.ogg");
     this.audioBoss = new Audio("./sounds/background-boss.mp3");
     this.audioWin = new Audio("./sounds/win.wav");
+  }
+  stopAllAudios(){
+    this.audioGameOver.pause()
+    this.audioBackgroundGame.pause()
+    this.audioGame2.pause()
+    this.audioEnemyDie.pause()
+    this.audioMenu.pause()
+    this.audioBonusUp.pause()
+    this.audioBoss.pause()
+    this.audioWin.pause()
   }
   volumeAudios() {
     this.audioGameOver.volume = this.volumeMusic;
@@ -196,7 +207,7 @@ class Game {
     setTimeout(() => {
       this.spawnEnemy(0.5, 1000, 2, 0);
     }, 5000);
-    this.spawnBoss(3000, 2,5);
+    this.spawnBoss(3000, 2,6);
   }
   attachEventListeners() {
     //Player movement with arrow keys
@@ -254,13 +265,13 @@ class Game {
         const newBoss = new Boss(health, classboss,this.bossPositionX,this.bossPositionY);
         this.allEnemies.push(newBoss);
         setTimeout(()=>{
-          this.spawnBossShot(36.3,classShot)
-          this.spawnBossShot((-36.3),classShot)
+          this.spawnBossShot(10,classShot)
+          this.spawnBossShot(33.5,classShot)
           this.moveBossShot(0.8);
         },6000)
       }, 10000);
       this.intervalIds.push(this.timeoutBoss);
-    }, 600);//Change to 60000
+    }, 60000);
     this.intervalIds.push(this.spawnerBoss);
   }
   spawnMeteor() {
@@ -285,14 +296,14 @@ class Game {
   spawnBossShot(positionX,image) {
     this.spawnerBossShot = setInterval(() => {
       const newBossShotLeft = new Shot(
-        this.bossPositionX - positionX,
-        80,
+        this.bossPositionX + positionX,
+        70,
         image
       );
       this.allBossShots.push(newBossShotLeft)
     }, 5000);
     console.log(this.bossPositionX)
-    this.intervalIds.push(this.spawnerBossShot)
+    this.allIntervalBossShots.push(this.spawnerBossShot)
   }
   spawnBonus() {
     this.spawnerBonus = setInterval(() => {
@@ -337,7 +348,7 @@ class Game {
         this.detectCollision(enemy, indexEnemy);
         enemy.moveDown();
       });
-    }, 32);
+    }, 16);
     this.intervalIds.push(this.movementEnemy);
   }
   moveMeteor() {
@@ -402,16 +413,16 @@ class Game {
         this.audioBonusUp.play();
         this.selectBonus(enemy);
       } else {
-        if (this.health.innerHTML < 1) {
-          this.displayGameOver();
+        if (this.health.innerHTML <= 1) {
           this.playerTakesDamage();
+          this.displayGameOver();
         } else if (!this.playerDamageDelay) {
           this.playerDamageDelay = true;
           this.player.playerDamaged();
           this.health.innerHTML--;
           this.playerTakesDamage();
           enemy.health--;
-          if (enemy.health < 1) {
+          if (enemy.health <= 1) {
             if (enemy instanceof Enemy) this.removeEnemy(enemy, indexEnemy);
             if (enemy instanceof Meteor) this.removeMeteor(enemy, indexEnemy);
           }
@@ -434,7 +445,7 @@ class Game {
           enemy instanceof Enemy ||
           enemy instanceof Boss
         )
-          this.removeShot(shot, index);
+        this.removeShot(shot, index);
         enemy.health--;
         if (enemy.health <= 1) {
           this.audioEnemyDie.play();
@@ -448,6 +459,9 @@ class Game {
           }
           if (enemy instanceof Boss) {
             enemy.bossHealthBar.remove();
+            this.allIntervalBossShots.forEach(element=>{
+              clearInterval(element)
+            })
             this.removeEnemy(enemy, indexEnemy);
             this.score.innerHTML = Number(this.score.innerHTML) + 100;
             this.audioBoss.pause();
@@ -462,6 +476,30 @@ class Game {
         }
       }
     });
+    this.allBossShots.forEach((shot,index)=>{
+      if (
+        shot.positionX <this.player.positionX +this.player.width &&
+        shot.positionX + shot.width >this.player.positionX &&
+        shot.positionY <this.player.positionY +this.player.height &&
+        shot.positionY + shot.height >this.player.positionY
+      )
+      {
+        if (this.health.innerHTML <= 1) {
+          this.displayGameOver();
+          this.playerTakesDamage();
+        } else if (!this.playerDamageDelay) {
+          this.playerDamageDelay = true;
+          this.player.playerDamaged();
+          this.health.innerHTML--;
+          this.playerTakesDamage();
+          this.removeBossShot(shot,index)
+          this.playerDelay = setTimeout(() => {
+            this.playerDamageDelay = false;
+          }, 4000);
+          this.timeoutIds.push(this.playerDelay);
+        }
+      }
+    })
   }
   selectBonus(bonus) {
     switch (bonus.modify) {
@@ -539,6 +577,9 @@ class Game {
     for (let i = 0; i < this.allCanons.length; i++) {
       clearTimeout(this.allCanons[i]);
     }
+    for (let i = 0; i < this.allIntervalBossShots.length; i++) {
+      clearTimeout(this.allIntervalBossShots[i]);
+    }
   }
   playerTakesDamage() {
     this.flash = document.createElement("div");
@@ -549,6 +590,7 @@ class Game {
     }, 100);
   }
   displayGameOver() {
+    this.stopAllAudios()
     this.audioGameOver.play();
     this.clearIntervals();
     this.displayEnd = document.createElement("div");
