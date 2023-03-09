@@ -133,7 +133,7 @@ class Game {
       `;
     this.boardElm.prepend(this.selectSpaceship);
     this.spaceshipSelected = [...document.getElementsByClassName("spaceship")];
-    this.spaceshipSelected.forEach((element, index) => {
+    this.spaceshipSelected.forEach((element) => {
       element.addEventListener("click", () => {
         this.spaceshipSelected.forEach((element2) => {
           element2.classList.remove("clicked");
