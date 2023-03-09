@@ -16,10 +16,10 @@ Arrow Keys to move the player, it's easy!
 
 Tasks for MVP (Minimal Value Product)
 
+- DONE!
+
 Tasks for a better game
 
-- Boss shot a laser
-- Enemies shoot often
 - Can resume the game after pause
 - Better assets 
 - Modify the player's div to 2 div for better collision
@@ -28,4 +28,3 @@ Tasks for a better game
 
 - Bug enemies often stop and not desapear
 - Bug when collision detected, player and enemy don't exactly match
-- Bug when win the game, the score are not the same
