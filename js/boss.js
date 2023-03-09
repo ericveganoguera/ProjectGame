@@ -1,12 +1,12 @@
 class Boss{
-    constructor(health,classBoss) {
+    constructor(health,classBoss,positionX,positionY) {
       this.speedMovement = 0.2;
       this.health = health;
       this.maxHealth = this.health;
       this.width = 73;
       this.height = 30;
-      this.positionX = 100 / 2 - this.width / 2;
-      this.positionY = 100;
+      this.positionX = positionX
+      this.positionY = positionY
       this.canCreateHealthBar = false;
       this.createDomElementBoss(classBoss);
     }

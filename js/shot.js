@@ -10,7 +10,7 @@ class Shot {
     }
     createDomElement(){
         this.shotSpawn = document.createElement("div")
-        this.shotSpawn.setAttribute("class","shot")
+        this.shotSpawn.classList.add("shot")
         this.shotSpawn.setAttribute("style",`left:${this.positionX}vh; bottom:${this.positionY}vh`)
         this.boardElm = document.getElementById("board")
         this.boardElm.appendChild(this.shotSpawn)
@@ -19,6 +19,10 @@ class Shot {
     }
     moveUp(speed){
         this.positionY += speed
+        this.shotSpawn.style.bottom = this.positionY + "vh"
+    }
+    moveDown(speed){
+        this.positionY -= speed
         this.shotSpawn.style.bottom = this.positionY + "vh"
     }
     selectBackground(image) {
@@ -34,6 +38,12 @@ class Shot {
           break;
           case 4:
           this.shotSpawn.classList.add("shot4")
+          case 5:
+          this.shotSpawn.classList.add("shot5")
+          this.width = 30;
+          this.height = 15;
+          this.shotSpawn.style.width = this.width + "vh"
+          this.shotSpawn.style.height = this.height + "vh"
           break;
   
         default:

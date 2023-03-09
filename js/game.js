@@ -3,6 +3,7 @@ class Game {
     this.allEnemies = [];
     this.allMeteor = [];
     this.allShots = [];
+    this.allBossShots = [];
     this.allCanons = [];
     this.allBonus = [];
     this.positionCanon = [
@@ -23,6 +24,9 @@ class Game {
     this.keysDown = {};
     this.volumeMusic = 0.5;
     this.volumeEffects = 0.5;
+    this.widthBoss = 73
+    this.bossPositionX = ((100 / 2) - (this.widthBoss / 2));
+    this.bossPositionY = 100;
     this.getElementsDOM();
     this.audios();
     this.reloadVolumeAudios();
@@ -66,6 +70,28 @@ class Game {
       this.volumeAudios();
     });
   }
+  intro() {
+    this.audioMenu.loop = true;
+    this.audioMenu.volume = this.volumeMusic;
+    this.audioMenu.play();
+    this.menu = document.createElement("div");
+    this.menu.setAttribute("id", "intro");
+    this.menu.innerHTML = `
+    <div id="title"></div>
+    <h1>SPACESHIP SHOOTER</h1>
+    <div id="instructions">
+    <div id="movement">
+    <img src="./assets/arrows.png" alt="img-movement" draggable="false">
+    <p>Use your arrow to move!</p>
+    </div>
+    <div id="start-button">
+    <a href="#" onclick="selectorSpaceship()"draggable="false">START</a>
+    <a id="options-display" onclick="options()">Options</a>
+    </div>
+    </div>
+    `;
+    this.boardElm.prepend(this.menu);
+  }
   spaceshipSelector() {
     this.menu.remove();
     (this.selectSpaceship = document.createElement("select-spaceship")),
@@ -107,29 +133,7 @@ class Game {
       });
     });
   }
-  intro() {
-    this.audioMenu.loop = true;
-    this.audioMenu.volume = this.volumeMusic;
-    this.audioMenu.play();
-    this.menu = document.createElement("div");
-    this.menu.setAttribute("id", "intro");
-    this.menu.innerHTML = `
-    <div id="title"></div>
-    <h1>SPACESHIP SHOOTER</h1>
-    <div id="instructions">
-    <div id="movement">
-    <img src="./assets/arrows.png" alt="img-movement" draggable="false">
-    <p>Use your arrow to move!</p>
-    </div>
-    <div id="start-button">
-    <a href="#" onclick="selectorSpaceship()"draggable="false">START</a>
-    <a id="options-display" onclick="options()">Options</a>
-    </div>
-    </div>
-    `;
-    this.boardElm.prepend(this.menu);
-  }
-  start() {
+  createPlayerWithSpaceShipCustom(){
     this.spaceshipFinal = document.getElementById("spaceship-final");
     this.textSpaceship = [
       ...this.spaceshipFinal.getElementsByClassName("text-spaceship"),
@@ -147,13 +151,16 @@ class Game {
       this.player = new Player(4);
       this.imageShot = 4;
     }
+  }
+  start() {
+    this.createPlayerWithSpaceShipCustom()
     this.selectSpaceship.remove();
+    this.audioMenu.pause();
     this.scoreId.style.display = "flex";
     this.healthId.style.display = "flex";
-    this.audioMenu.pause();
     this.audioBackgroundGame.loop = true;
-    this.firstWave = true;
     this.audioBackgroundGame.play();
+    this.Wave = 1;
     this.spawnShot(
       this.positionCanon[0][0],
       this.positionCanon[0][1],
@@ -164,14 +171,15 @@ class Game {
       this.positionCanon[1][1],
       this.imageShot
     );
-    this.spawnEnemy(0.4, 1200, 1, 15000);
     this.spawnMeteor();
     this.spawnBonus();
-    this.spawnBoss(500, 1);
-    this.moveEnemy();
-    this.moveMeteor();
+    this.spawnEnemy(0.4, 1200, 1, 15000);
+    this.spawnBoss(500, 1,5);
     this.moveShot(0.8);
+    this.moveBossShot(0.5)
+    this.moveMeteor();
     this.moveBonus();
+    this.moveEnemy();
     this.attachEventListeners();
     this.movePlayer();
   }
@@ -188,8 +196,7 @@ class Game {
     setTimeout(() => {
       this.spawnEnemy(0.5, 1000, 2, 0);
     }, 5000);
-    this.spawnBoss(3000, 2);
-    console.log(this.firstWave)
+    this.spawnBoss(3000, 2,5);
   }
   attachEventListeners() {
     //Player movement with arrow keys
@@ -221,7 +228,7 @@ class Game {
     }, firstSpawn);
     this.timeoutIds.push(this.firstSpawnEnemy);
   }
-  spawnBoss(health, classboss) {
+  spawnBoss(health, classboss,classShot) {
     //Spawn boss with timeout 60 seconds
     this.spawnerBoss = setTimeout(() => {
       //Stop enemy spawn
@@ -244,11 +251,16 @@ class Game {
       }, 4000);
       //Spawn boss with a delay of 10s!
       this.timeoutBoss = setTimeout(() => {
-        const newBoss = new Boss(health, classboss);
+        const newBoss = new Boss(health, classboss,this.bossPositionX,this.bossPositionY);
         this.allEnemies.push(newBoss);
+        setTimeout(()=>{
+          this.spawnBossShot(36.3,classShot)
+          this.spawnBossShot((-36.3),classShot)
+          this.moveBossShot(0.8);
+        },6000)
       }, 10000);
       this.intervalIds.push(this.timeoutBoss);
-    }, 60000);
+    }, 600);//Change to 60000
     this.intervalIds.push(this.spawnerBoss);
   }
   spawnMeteor() {
@@ -258,7 +270,7 @@ class Game {
     }, 1000);
     this.intervalIds.push(this.spawnerMeteor);
   }
-  spawnShot(positionX, positionY, image) {
+  spawnShot(positionX,positionY, image) {
     //Player shots every XX ms
     this.spawnerShot = setInterval(() => {
       const newShot = new Shot(
@@ -269,6 +281,18 @@ class Game {
       this.allShots.push(newShot);
     }, this.speedSpawnShot);
     this.allCanons.push(this.spawnerShot);
+  }
+  spawnBossShot(positionX,image) {
+    this.spawnerBossShot = setInterval(() => {
+      const newBossShotLeft = new Shot(
+        this.bossPositionX - positionX,
+        80,
+        image
+      );
+      this.allBossShots.push(newBossShotLeft)
+    }, 5000);
+    console.log(this.bossPositionX)
+    this.intervalIds.push(this.spawnerBossShot)
   }
   spawnBonus() {
     this.spawnerBonus = setInterval(() => {
@@ -289,6 +313,19 @@ class Game {
       });
     }, 16);
     this.intervalIds.push(this.movementShot);
+  }
+  moveBossShot(speed) {
+    //Move the shots
+    this.movementBossShot = setInterval(() => {
+      this.allBossShots.forEach((bossShot, index) => {
+        bossShot.moveDown(speed);
+        if (bossShot.positionY < 0) {
+          console.log("OUT")
+          this.removeBossShot(bossShot, index);
+        }
+      });
+    }, 16);
+    this.intervalIds.push(this.movementBossShot);
   }
   moveEnemy() {
     //Move the enemies down every XX ms
@@ -414,10 +451,13 @@ class Game {
             this.removeEnemy(enemy, indexEnemy);
             this.score.innerHTML = Number(this.score.innerHTML) + 100;
             this.audioBoss.pause();
-            if (this.firstWave) {
-              this.firstWave = false;
+            if (this.Wave === 1) {
+              this.Wave++
               this.secondWave();
-            } else if (!this.firstWave) this.displayWin();
+            } else if (this.Wave===2) {
+              this.Wave++
+              this.displayWin();
+            }
           }
         }
       }
@@ -480,6 +520,10 @@ class Game {
   removeShot(shot, index) {
     shot.shotSpawn.remove();
     this.allShots.splice(index, 1);
+  }
+  removeBossShot(shot, index) {
+    shot.shotSpawn.remove();
+    this.allBossShots.splice(index, 1);
   }
   removeBonus(bonus, index) {
     bonus.bonusSpawn.remove();

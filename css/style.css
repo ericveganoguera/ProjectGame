@@ -48,8 +48,8 @@ body {
 }
 /* Board styles */
 #board {
-    background-image: url(../assets/background1.png);
-    background-size: 100%;
+    background-image: url(../assets/background.png);
+    background-size: cover;
     box-sizing: border-box;
     display: flex;
     justify-content: center;
@@ -163,6 +163,10 @@ body {
 }
 .shot4{
     background-image: url(../assets/shot4.png);
+}
+.shot5{
+    background-image: url(../assets/shot5.png);
+    transform: rotate(90deg);
 }
 
 #options {

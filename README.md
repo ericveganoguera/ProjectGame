@@ -20,7 +20,6 @@ Tasks for a better game
 
 - Boss shot a laser
 - Enemies shoot often
-- Differents spaceships with option to speed for example
 - Can resume the game after pause
 - Better assets 
 - Modify the player's div to 2 div for better collision
@@ -28,5 +27,4 @@ Tasks for a better game
 # Fix
 
 - Bug enemies often stop and not desapear
-- Enemies2 spawn for a short time only
 - Bug when collision detected, player and enemy don't exactly match
