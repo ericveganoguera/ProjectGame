@@ -4,6 +4,8 @@ This is my first game with Javascript, HTML and CSS
 
 It's a vertical spaceship shooter!
 
+![Image demo](./Images/image-demo.png)
+
 # How to play
 
 Arrow Keys to move the player, it's easy!
