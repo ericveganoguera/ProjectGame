@@ -16,6 +16,8 @@ class Bonus {
     this.boardElm.appendChild(this.bonusSpawn);
     this.bonusSpawn.style.width = this.width + "vh";
     this.bonusSpawn.style.height = this.height + "vh";
+    this.bonusSpawn.style.left = this.positionX + "vh";
+    this.bonusSpawn.style.bottom = this.positionY + "vh";
     switch (this.modify) {
       case 1:
         //Bonus attack speed
